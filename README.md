@@ -34,7 +34,9 @@ src/main/java/cvvl/simulator/   # logika w Javie
 gdj/                            # wygenerowane rejestracje (po build)
 scenes/                         # sceny Godot
 assets/                           # tła, fonty, UI
-vehicles/                         # modele .glb (import w edytorze)
+vehicles/                         # modele aut .glb
+maps/                             # mapa świata: parking_map.glb
+scenes/world/                     # ParkingMap.tscn (instancja mapy w Game)
 systems/                          # rozszerzenia (zapis, opcje — wkrótce)
 ```
 

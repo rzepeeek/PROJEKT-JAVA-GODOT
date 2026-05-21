@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://parking_map_scene"]
+
+[ext_resource type="PackedScene" uid="uid://bm0fre0x45kcm" path="res://maps/Parking_map.glb" id="1_map"]
+[ext_resource type="Script" path="res://gdj/cvvl/simulator/world/ParkingMapBootstrap.gdj" id="2_boot"]
+
+[node name="ParkingMap" type="Node3D"]
+script = ExtResource("2_boot")
+
+[node name="MapModel" parent="." instance=ExtResource("1_map")]

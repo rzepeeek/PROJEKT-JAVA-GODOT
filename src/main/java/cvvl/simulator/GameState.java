@@ -48,51 +48,51 @@ public class GameState extends Node {
 	@RegisterProperty
 	public int difficulty = 1;
 
-    @RegisterProperty
-    public String currentVehiclePlate = "—";
+	@RegisterProperty
+	public String currentVehiclePlate = "—";
 
-    @RegisterProperty
-    public String returnScenePath = ScenePaths.MAIN_MENU;
+	@RegisterProperty
+	public String returnScenePath = ScenePaths.MAIN_MENU;
 
-    @RegisterProperty
-    public boolean reopenPauseAfterReturn = false;
+	@RegisterProperty
+	public boolean reopenPauseAfterReturn = false;
 
-    @RegisterProperty
-    public int targetFps = 60;
+	@RegisterProperty
+	public int targetFps = 60;
 
-    /** "load" lub "save" — tryb menu zapisów */
-    @RegisterProperty
-    public String saveMenuMode = "load";
+	/** "load" lub "save" — tryb menu zapisów */
+	@RegisterProperty
+	public String saveMenuMode = "load";
 
-    @RegisterProperty
-    public boolean persistPlayerTransform = false;
+	@RegisterProperty
+	public boolean persistPlayerTransform = false;
 
-    @RegisterProperty
-    public float playerPosX = 0f;
+	@RegisterProperty
+	public float playerPosX = 0f;
 
-    @RegisterProperty
-    public float playerPosY = 2f;
+	@RegisterProperty
+	public float playerPosY = 2f;
 
-    @RegisterProperty
-    public float playerPosZ = 4f;
+	@RegisterProperty
+	public float playerPosZ = 4f;
 
-    @RegisterProperty
-    public float playerRotY = 0f;
+	@RegisterProperty
+	public float playerRotY = 0f;
 
-    @RegisterProperty
-    public float playerPitch = 0f;
+	@RegisterProperty
+	public float playerPitch = 0f;
 
-    private final Set<String> finedVehiclePlates = new HashSet<>();
+	private final Set<String> finedVehiclePlates = new HashSet<>();
 
-    @RegisterFunction
-    public void prepareReturnTo(String scenePath, boolean reopenPause) {
-        returnScenePath = scenePath;
-        reopenPauseAfterReturn = reopenPause;
-    }
+	@RegisterFunction
+	public void prepareReturnTo(String scenePath, boolean reopenPause) {
+		returnScenePath = scenePath;
+		reopenPauseAfterReturn = reopenPause;
+	}
 
-    @RegisterFunction
-    @Override
-    public void _ready() {
+	@RegisterFunction
+	@Override
+	public void _ready() {
 		instance = this;
 		notifyStateChanged();
 	}
@@ -145,49 +145,49 @@ public class GameState extends Node {
 		return "Dzień " + day;
 	}
 
-    @RegisterFunction
-    public void notifyStateChanged() {
-        stateChanged.emit();
-    }
+	@RegisterFunction
+	public void notifyStateChanged() {
+		stateChanged.emit();
+	}
 
-    @RegisterFunction
-    public void clearPlayerTransform() {
-        persistPlayerTransform = false;
-    }
+	@RegisterFunction
+	public void clearPlayerTransform() {
+		persistPlayerTransform = false;
+	}
 
-    @RegisterFunction
-    public void capturePlayerTransform(float x, float y, float z, float rotY, float pitch) {
-        playerPosX = x;
-        playerPosY = y;
-        playerPosZ = z;
-        playerRotY = rotY;
-        playerPitch = pitch;
-        persistPlayerTransform = true;
-    }
+	@RegisterFunction
+	public void capturePlayerTransform(float x, float y, float z, float rotY, float pitch) {
+		playerPosX = x;
+		playerPosY = y;
+		playerPosZ = z;
+		playerRotY = rotY;
+		playerPitch = pitch;
+		persistPlayerTransform = true;
+	}
 
-    @RegisterFunction
-    public boolean isVehicleFined(String plate) {
-        String key = normalizePlate(plate);
-        return !key.isEmpty() && finedVehiclePlates.contains(key);
-    }
+	@RegisterFunction
+	public boolean isVehicleFined(String plate) {
+		String key = normalizePlate(plate);
+		return !key.isEmpty() && finedVehiclePlates.contains(key);
+	}
 
-    @RegisterFunction
-    public void markVehicleFined(String plate) {
-        String key = normalizePlate(plate);
-        if (!key.isEmpty()) {
-            finedVehiclePlates.add(key);
-        }
-    }
+	@RegisterFunction
+	public void markVehicleFined(String plate) {
+		String key = normalizePlate(plate);
+		if (!key.isEmpty()) {
+			finedVehiclePlates.add(key);
+		}
+	}
 
-    private static String normalizePlate(String plate) {
-        if (plate == null) {
-            return "";
-        }
-        return plate.trim().replaceAll("\\s+", " ");
-    }
+	private static String normalizePlate(String plate) {
+		if (plate == null) {
+			return "";
+		}
+		return plate.trim().replaceAll("\\s+", " ");
+	}
 
-    @RegisterFunction
-    public void clearFinedVehicles() {
-        finedVehiclePlates.clear();
-    }
+	@RegisterFunction
+	public void clearFinedVehicles() {
+		finedVehiclePlates.clear();
+	}
 }

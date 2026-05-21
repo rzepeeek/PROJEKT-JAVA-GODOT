@@ -22,7 +22,8 @@ properties = [
     walk_speed,
 	sprint_speed,
 	jump_velocity,
-	gravity
+	gravity,
+	eye_height_base
 ]
 functions = [
     _ready,

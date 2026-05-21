@@ -6,6 +6,7 @@ import godot.annotation.RegisterFunction;
 import godot.annotation.RegisterProperty;
 import godot.api.Camera3D;
 import godot.api.CharacterBody3D;
+import godot.api.Node3D;
 import godot.api.Input;
 import godot.api.InputEventMouseMotion;
 import godot.core.Vector2;
@@ -25,32 +26,47 @@ public class FpsPlayer extends CharacterBody3D {
 	@RegisterProperty
 	public float gravity = 9.8f;
 
-    private Camera3D camera;
-    private float pitch = 0f;
-    private boolean gameplayEnabled = true;
+	/** Wysokość oczu na postoju — jak na szczycie skoku (baza + wysokość skoku). */
+	@RegisterProperty
+	public float eyeHeightBase = 1.85f;
 
-    @RegisterFunction
-    @Override
-    public void _ready() {
+	private Camera3D camera;
+	private float pitch = 0f;
+	private boolean gameplayEnabled = true;
+
+	@RegisterFunction
+	@Override
+	public void _ready() {
+		applyStandingEyeHeight();
 		camera = (Camera3D) getNode("Head/Camera3D");
 		camera.makeCurrent();
 		Input.setMouseMode(Input.MouseMode.CAPTURED);
 	}
 
-    @RegisterFunction
-    public void setGameplayEnabled(boolean enabled) {
-        gameplayEnabled = enabled;
-        setProcess(enabled);
-        setPhysicsProcess(enabled);
-    }
+	private void applyStandingEyeHeight() {
+		Node3D head = (Node3D) getNode("Head");
+		float eyeHeight = eyeHeightBase + jumpPeakHeight();
+		head.setPosition(new Vector3(0, eyeHeight, 0));
+	}
 
-    @RegisterFunction
-    @Override
-    public void _input(godot.api.InputEvent event) {
-        if (!gameplayEnabled) {
-            return;
-        }
-        if (event instanceof InputEventMouseMotion motion) {
+	private float jumpPeakHeight() {
+		return (jumpVelocity * jumpVelocity) / (2f * gravity);
+	}
+
+	@RegisterFunction
+	public void setGameplayEnabled(boolean enabled) {
+		gameplayEnabled = enabled;
+		setProcess(enabled);
+		setPhysicsProcess(enabled);
+	}
+
+	@RegisterFunction
+	@Override
+	public void _input(godot.api.InputEvent event) {
+		if (!gameplayEnabled) {
+			return;
+		}
+		if (event instanceof InputEventMouseMotion motion) {
 			if (Input.getMouseMode() != Input.MouseMode.CAPTURED) {
 				return;
 			}
@@ -67,13 +83,13 @@ public class FpsPlayer extends CharacterBody3D {
 		}
 	}
 
-    @RegisterFunction
-    @Override
-    public void _physicsProcess(double delta) {
-        if (!gameplayEnabled) {
-            return;
-        }
-        Vector3 velocity = getVelocity();
+	@RegisterFunction
+	@Override
+	public void _physicsProcess(double delta) {
+		if (!gameplayEnabled) {
+			return;
+		}
+		Vector3 velocity = getVelocity();
 		if (!isOnFloor()) {
 			velocity.setY(velocity.getY() - gravity * (float) delta);
 		} else if (Input.isActionJustPressed("jump")) {
