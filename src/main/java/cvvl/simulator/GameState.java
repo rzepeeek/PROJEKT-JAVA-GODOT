@@ -167,14 +167,23 @@ public class GameState extends Node {
 
     @RegisterFunction
     public boolean isVehicleFined(String plate) {
-        return plate != null && !plate.isEmpty() && finedVehiclePlates.contains(plate);
+        String key = normalizePlate(plate);
+        return !key.isEmpty() && finedVehiclePlates.contains(key);
     }
 
     @RegisterFunction
     public void markVehicleFined(String plate) {
-        if (plate != null && !plate.isEmpty()) {
-            finedVehiclePlates.add(plate);
+        String key = normalizePlate(plate);
+        if (!key.isEmpty()) {
+            finedVehiclePlates.add(key);
         }
+    }
+
+    private static String normalizePlate(String plate) {
+        if (plate == null) {
+            return "";
+        }
+        return plate.trim().replaceAll("\\s+", " ");
     }
 
     @RegisterFunction

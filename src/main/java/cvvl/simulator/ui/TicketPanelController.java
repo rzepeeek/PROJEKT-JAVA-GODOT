@@ -88,7 +88,7 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onFineClicked() {
-		if (activeVehicle != null && activeVehicle.fineIssued) {
+		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
 		if (fineSubmenu != null) {
@@ -98,12 +98,18 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onWarningClicked() {
+		if (isAlreadyFined(activeVehicle)) {
+			return;
+		}
 		resolveAction(false, 5, -2);
 		hidePanel();
 	}
 
 	@RegisterFunction
 	public void onIgnoreClicked() {
+		if (isAlreadyFined(activeVehicle)) {
+			return;
+		}
 		if (activeVehicle != null && activeVehicle.getActualViolation() != ParkingViolation.VALID) {
 			resolveAction(false, 0, -5);
 		} else {
@@ -133,7 +139,7 @@ public class TicketPanelController extends PanelContainer {
 	}
 
 	private void applyFine(ParkingViolation chosen) {
-		if (activeVehicle == null || activeVehicle.fineIssued) {
+		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
 		ParkingViolation actual = activeVehicle.getActualViolation();
@@ -141,21 +147,36 @@ public class TicketPanelController extends PanelContainer {
 
 		if (correct) {
 			resolveAction(true, 25, 8);
-			activeVehicle.fineIssued = true;
-			if (GameState.instance != null) {
-				GameState.instance.markVehicleFined(activeVehicle.plate);
-			}
 		} else if (actual == ParkingViolation.VALID) {
 			resolveAction(false, -15, -10);
 		} else {
 			resolveAction(false, -10, -6);
 		}
+		markVehicleAsFined(activeVehicle);
 		hidePanel();
 	}
 
-	private void updateFineControls(Vehicle vehicle) {
-		boolean blocked = vehicle.fineIssued
+	private boolean isAlreadyFined(Vehicle vehicle) {
+		if (vehicle == null) {
+			return true;
+		}
+		vehicle.syncFineStatusFromGameState();
+		return vehicle.fineIssued
 				|| (GameState.instance != null && GameState.instance.isVehicleFined(vehicle.plate));
+	}
+
+	private void markVehicleAsFined(Vehicle vehicle) {
+		if (vehicle == null) {
+			return;
+		}
+		vehicle.fineIssued = true;
+		if (GameState.instance != null) {
+			GameState.instance.markVehicleFined(vehicle.plate);
+		}
+	}
+
+	private void updateFineControls(Vehicle vehicle) {
+		boolean blocked = isAlreadyFined(vehicle);
 		if (blocked) {
 			vehicle.fineIssued = true;
 		}
@@ -167,6 +188,24 @@ public class TicketPanelController extends PanelContainer {
 		}
 		if (fineSubmenu != null) {
 			fineSubmenu.setVisible(false);
+		}
+		setFineButtonsEnabled(!blocked);
+	}
+
+	private void setFineButtonsEnabled(boolean enabled) {
+		String[] paths = {
+				"Margin/VBox/Actions/BtnFine",
+				"Margin/VBox/Actions/BtnWarning",
+				"Margin/VBox/Actions/BtnIgnore",
+				"Margin/VBox/FineSubmenu/BtnNoTicket",
+				"Margin/VBox/FineSubmenu/BtnExpired",
+				"Margin/VBox/FineSubmenu/BtnWrongSpot"
+		};
+		for (String path : paths) {
+			Button btn = (Button) getNodeOrNull(path);
+			if (btn != null) {
+				btn.setDisabled(!enabled);
+			}
 		}
 	}
 

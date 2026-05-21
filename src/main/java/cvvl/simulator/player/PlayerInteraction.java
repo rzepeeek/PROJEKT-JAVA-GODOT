@@ -1,10 +1,13 @@
 package cvvl.simulator.player;
 
 import cvvl.simulator.vehicles.Vehicle;
+import cvvl.simulator.vehicles.VehicleModelHelper;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
 import godot.annotation.RegisterSignal;
 import godot.api.Camera3D;
+import godot.api.CollisionShape3D;
+import godot.api.CollisionObject3D;
 import godot.api.Input;
 import godot.api.Node;
 import godot.api.PhysicsRayQueryParameters3D;
@@ -39,6 +42,7 @@ public class PlayerInteraction extends Node {
 	@Override
 	public void _unhandledInput(godot.api.InputEvent event) {
 		if (event.isActionPressed("interact") && currentTarget != null) {
+			currentTarget.syncFineStatusFromGameState();
 			vehicleTargeted.emit(currentTarget);
 		}
 	}
@@ -59,11 +63,12 @@ public class PlayerInteraction extends Node {
 
 		Vector3 from = camera.getGlobalPosition();
 		Vector3 forward = camera.getGlobalTransform().getBasis().getColumn(2).unaryMinus();
-		Vector3 to = from.plus(forward.times(4.0));
+		Vector3 to = from.plus(forward.times(8.0));
 
 		PhysicsRayQueryParameters3D params = PhysicsRayQueryParameters3D.create(from, to);
-		params.setCollideWithAreas(true);
+		params.setCollideWithAreas(false);
 		params.setCollideWithBodies(true);
+		params.setCollisionMask(VehicleModelHelper.VEHICLE_COLLISION_LAYER);
 
 		Dictionary<Object, Object> result = world.getDirectSpaceState().intersectRay(params);
 		if (result.isEmpty()) {
@@ -71,7 +76,8 @@ public class PlayerInteraction extends Node {
 		}
 
 		Object collider = result.get("collider");
-		if (!(collider instanceof Node node)) {
+		Node node = resolveColliderNode(collider);
+		if (node == null) {
 			return null;
 		}
 
@@ -80,6 +86,20 @@ public class PlayerInteraction extends Node {
 				return vehicle;
 			}
 			node = node.getParent();
+		}
+		return null;
+	}
+
+	private Node resolveColliderNode(Object collider) {
+		if (collider instanceof CollisionShape3D shape) {
+			Node parent = shape.getParent();
+			return parent instanceof Node n ? n : null;
+		}
+		if (collider instanceof CollisionObject3D body) {
+			return body;
+		}
+		if (collider instanceof Node node) {
+			return node;
 		}
 		return null;
 	}

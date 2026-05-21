@@ -58,17 +58,17 @@ public class SettingsManager extends godot.api.Node {
             return;
         }
 
-        int fps = (int) config.getValue(SECTION, KEY_FPS, 60);
+        int fps = readInt(config, KEY_FPS, 60);
         syncFpsIndexFromValue(fps);
 
         if (config.hasSectionKey(SECTION, KEY_SENS_PERCENT)) {
-            sensitivityPercent = clampPercent(((Number) config.getValue(SECTION, KEY_SENS_PERCENT, 25)).intValue());
+            sensitivityPercent = clampPercent(readInt(config, KEY_SENS_PERCENT, 25));
         } else {
-            float legacySens = ((Number) config.getValue(SECTION, KEY_SENS, 0.01f)).floatValue();
+            float legacySens = readFloat(config, KEY_SENS, 0.01f);
             sensitivityPercent = sensitivityFromLegacy(legacySens);
         }
         applyPercentToSensitivity();
-        invertMouse = (boolean) config.getValue(SECTION, KEY_INVERT, false);
+        invertMouse = readBool(config, KEY_INVERT, false);
         syncToGameState(fps);
 
         for (String action : InputActions.BINDABLE) {
@@ -265,5 +265,35 @@ public class SettingsManager extends godot.api.Node {
                 return;
             }
         }
+    }
+
+    private static int readInt(ConfigFile config, String key, int defaultValue) {
+        Object value = config.getValue(SECTION, key, defaultValue);
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        if (value instanceof Boolean bool) {
+            return bool ? 1 : 0;
+        }
+        return defaultValue;
+    }
+
+    private static float readFloat(ConfigFile config, String key, float defaultValue) {
+        Object value = config.getValue(SECTION, key, defaultValue);
+        if (value instanceof Number number) {
+            return number.floatValue();
+        }
+        return defaultValue;
+    }
+
+    private static boolean readBool(ConfigFile config, String key, boolean defaultValue) {
+        Object value = config.getValue(SECTION, key, defaultValue);
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        if (value instanceof Number number) {
+            return number.intValue() != 0;
+        }
+        return defaultValue;
     }
 }

@@ -5,7 +5,10 @@ import godot.annotation.RegisterFunction;
 import godot.api.BoxMesh;
 import godot.api.CollisionShape3D;
 import godot.api.MeshInstance3D;
+import godot.api.Node;
 import godot.api.Node3D;
+import godot.api.PackedScene;
+import godot.api.ResourceLoader;
 import godot.api.StandardMaterial3D;
 import godot.api.BoxShape3D;
 import godot.api.Marker3D;
@@ -18,6 +21,10 @@ import java.util.List;
 
 @RegisterClass
 public class VehicleSpawner extends Node3D {
+	/** Wrzuć model do folderu vehicles/ w katalogu projektu (patrz vehicles/README.md). */
+	private static final String CUSTOM_VEHICLE_MODEL = "res://vehicles/car.glb";
+	private static final Vector3 PLACEHOLDER_COLLISION_SIZE = new Vector3(1.8f, 1.2f, 3.6f);
+
 	private static final String[] SPOT_NAMES = {"parking_01", "parking_02", "parking_03"};
 	private static final String[] SPOT_TYPES = {"standard", "disabled", "delivery"};
 	private static final String[] PLATE_PREFIX = {"KR", "WW", "GD", "PO", "WA"};
@@ -56,17 +63,38 @@ public class VehicleSpawner extends Node3D {
 		vehicle.parkingMinutes = rng.randfRange(5f, 240f);
 		vehicle.ticketType = randomTicketType();
 
-		buildVisual(vehicle, randomCarColor());
+		VehicleModelHelper.configureVehiclePhysics(vehicle);
+		addCollisionShape(vehicle, PLACEHOLDER_COLLISION_SIZE, new Vector3(0, 0, 0));
+
+		if (!buildVisualFromCustomModel(vehicle)) {
+			buildPlaceholderVisual(vehicle, randomCarColor());
+		}
 		vehicle.syncFineStatusFromGameState();
 		addChild(vehicle);
 		spawned.add(vehicle);
 	}
 
-	private void buildVisual(Vehicle vehicle, Color color) {
+	private boolean buildVisualFromCustomModel(Vehicle vehicle) {
+		if (!ResourceLoader.exists(CUSTOM_VEHICLE_MODEL)) {
+			return false;
+		}
+		godot.api.Resource resource = ResourceLoader.load(CUSTOM_VEHICLE_MODEL);
+		if (!(resource instanceof PackedScene scene)) {
+			return false;
+		}
+		Node instance = scene.instantiate();
+		if (instance == null) {
+			return false;
+		}
+		VehicleModelHelper.attachVisualModel(vehicle, instance);
+		return true;
+	}
+
+	private void buildPlaceholderVisual(Vehicle vehicle, Color color) {
 		MeshInstance3D body = new MeshInstance3D();
 		body.setName("Body");
 		BoxMesh mesh = new BoxMesh();
-		mesh.setSize(new Vector3(1.8f, 1.2f, 3.6f));
+		mesh.setSize(PLACEHOLDER_COLLISION_SIZE);
 		body.setMesh(mesh);
 
 		StandardMaterial3D material = new StandardMaterial3D();
@@ -75,12 +103,15 @@ public class VehicleSpawner extends Node3D {
 		material.setRoughness(0.45f);
 		body.setMaterialOverride(material);
 		vehicle.addChild(body);
+	}
 
+	private void addCollisionShape(Vehicle vehicle, Vector3 size, Vector3 center) {
 		CollisionShape3D collision = new CollisionShape3D();
 		collision.setName("Collision");
 		BoxShape3D shape = new BoxShape3D();
-		shape.setSize(new Vector3(1.8f, 1.2f, 3.6f));
+		shape.setSize(size);
 		collision.setShape(shape);
+		collision.setPosition(center);
 		vehicle.addChild(collision);
 	}
 
