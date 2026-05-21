@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=3 uid="uid://main_menu"]
+
+[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/MainMenuController.gdj" id="1"]
+[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/DispatchMenuButton.gdj" id="2"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.05, 0.1, 1)
+
+[node name="BackgroundGradient" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.12, 0.18, 0.45)
+
+[node name="MenuPanel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 80.0
+offset_top = -200.0
+offset_right = 480.0
+offset_bottom = 200.0
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="MenuPanel"]
+theme_override_colors/font_color = Color(0.2, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 32
+text = "CVVL DISPATCH"
+
+[node name="Subtitle" type="Label" parent="MenuPanel"]
+theme_override_colors/font_color = Color(0.55, 0.7, 0.78, 1)
+theme_override_font_sizes/font_size = 14
+text = "Parking Enforcement Terminal"
+
+[node name="Spacer" type="Control" parent="MenuPanel"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="BtnStart" type="Button" parent="MenuPanel"]
+custom_minimum_size = Vector2(320, 44)
+layout_mode = 2
+script = ExtResource("2")
+text = "Rozpocznij gre"
+
+[node name="BtnTutorial" type="Button" parent="MenuPanel"]
+custom_minimum_size = Vector2(320, 44)
+layout_mode = 2
+script = ExtResource("2")
+text = "Samouczek"
+
+[node name="BtnLoad" type="Button" parent="MenuPanel"]
+custom_minimum_size = Vector2(320, 44)
+layout_mode = 2
+script = ExtResource("2")
+text = "Wczytaj gre"
+
+[node name="BtnSettings" type="Button" parent="MenuPanel"]
+custom_minimum_size = Vector2(320, 44)
+layout_mode = 2
+script = ExtResource("2")
+text = "Ustawienia"
+
+[node name="BtnQuit" type="Button" parent="MenuPanel"]
+custom_minimum_size = Vector2(320, 44)
+layout_mode = 2
+script = ExtResource("2")
+text = "Wyjscie"

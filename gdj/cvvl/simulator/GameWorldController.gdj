@@ -1,0 +1,31 @@
+// THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
+// Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
+
+registeredName = GameWorldController
+fqName = cvvl.simulator.GameWorldController
+baseType = Node
+supertypes = [
+    godot.api.Node,
+	godot.api.Object,
+	godot.core.KtObject,
+	godot.common.interop.NativeWrapper,
+	godot.common.interop.NativePointer
+]
+signals = [
+    
+]
+properties = [
+    
+]
+functions = [
+    _ready,
+	_unhandled_input,
+	toggle_pause,
+	open_pause_menu,
+	resume_from_pause,
+	open_in_game_submenu,
+	close_in_game_submenu,
+	capture_player_transform,
+	is_paused,
+	on_vehicle_targeted
+]

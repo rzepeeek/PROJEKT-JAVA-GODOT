@@ -1,0 +1,56 @@
+// THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
+// Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
+
+registeredName = GameState
+fqName = cvvl.simulator.GameState
+baseType = Node
+supertypes = [
+    godot.api.Node,
+	godot.api.Object,
+	godot.core.KtObject,
+	godot.common.interop.NativeWrapper,
+	godot.common.interop.NativePointer
+]
+signals = [
+    state_changed
+]
+properties = [
+    money,
+	reputation,
+	tickets_issued,
+	day,
+	hour,
+	minute,
+	mouse_sensitivity,
+	invert_mouse,
+	vsync,
+	difficulty,
+	current_vehicle_plate,
+	return_scene_path,
+	reopen_pause_after_return,
+	target_fps,
+	save_menu_mode,
+	persist_player_transform,
+	player_pos_x,
+	player_pos_y,
+	player_pos_z,
+	player_rot_y,
+	player_pitch
+]
+functions = [
+    prepare_return_to,
+	_ready,
+	advance_time,
+	add_money,
+	change_reputation,
+	increment_tickets,
+	set_current_vehicle_plate,
+	format_clock,
+	format_day,
+	notify_state_changed,
+	clear_player_transform,
+	capture_player_transform,
+	is_vehicle_fined,
+	mark_vehicle_fined,
+	clear_fined_vehicles
+]

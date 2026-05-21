@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3 uid="uid://ticket_panel"]
+
+[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/TicketPanelController.gdj" id="1"]
+
+[node name="TicketPanel" type="PanelContainer"]
+visible = false
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = -260.0
+offset_right = -24.0
+offset_bottom = 260.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+text = "PANEL MANDATU"
+
+[node name="Sections" type="VBoxContainer" parent="Margin/VBox"]
+theme_override_constants/separation = 8
+
+[node name="Pojazd" type="HBoxContainer" parent="Margin/VBox/Sections"]
+
+[node name="Label" type="Label" parent="Margin/VBox/Sections/Pojazd"]
+text = "Pojazd:"
+
+[node name="Value" type="Label" parent="Margin/VBox/Sections/Pojazd"]
+text = "—"
+
+[node name="Status" type="HBoxContainer" parent="Margin/VBox/Sections"]
+
+[node name="Label" type="Label" parent="Margin/VBox/Sections/Status"]
+text = "Tablica:"
+
+[node name="Value" type="Label" parent="Margin/VBox/Sections/Status"]
+text = "—"
+
+[node name="Limit" type="VBoxContainer" parent="Margin/VBox/Sections"]
+
+[node name="StatusValue" type="Label" parent="Margin/VBox/Sections/Limit"]
+text = "Status parkowania"
+
+[node name="LimitValue" type="Label" parent="Margin/VBox/Sections/Limit"]
+text = "Limit: —"
+
+[node name="FineBlocked" type="Label" parent="Margin/VBox"]
+visible = false
+theme_override_colors/font_color = Color(0.95, 0.55, 0.35, 1)
+text = "Dla tego pojazdu mandat został już wystawiony."
+autowrap_mode = 2
+
+[node name="Actions" type="VBoxContainer" parent="Margin/VBox"]
+theme_override_constants/separation = 6
+
+[node name="BtnFine" type="Button" parent="Margin/VBox/Actions"]
+text = "Mandat"
+
+[node name="BtnWarning" type="Button" parent="Margin/VBox/Actions"]
+text = "Ostrzeżenie"
+
+[node name="BtnIgnore" type="Button" parent="Margin/VBox/Actions"]
+text = "Ignoruj"
+
+[node name="BtnClose" type="Button" parent="Margin/VBox/Actions"]
+text = "Zamknij"
+
+[node name="FineSubmenu" type="VBoxContainer" parent="Margin/VBox"]
+visible = false
+theme_override_constants/separation = 6
+
+[node name="SubTitle" type="Label" parent="Margin/VBox/FineSubmenu"]
+text = "Wybierz powód:"
+
+[node name="BtnNoTicket" type="Button" parent="Margin/VBox/FineSubmenu"]
+text = "Brak biletu"
+
+[node name="BtnExpired" type="Button" parent="Margin/VBox/FineSubmenu"]
+text = "Przekroczony czas"
+
+[node name="BtnWrongSpot" type="Button" parent="Margin/VBox/FineSubmenu"]
+text = "Zle miejsce"

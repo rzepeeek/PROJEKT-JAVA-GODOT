@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Gradle / JVM
+.gradle/
+build/
+.kotlin/
+.import/
+.export/
+.tmp/
+
+# Generated registration files are committed for editor convenience
+# scripts/

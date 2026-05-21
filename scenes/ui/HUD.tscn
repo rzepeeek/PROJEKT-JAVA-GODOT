@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://hud_dispatch"]
+
+[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/HudController.gdj" id="1"]
+
+[node name="HUD" type="PanelContainer"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 340.0
+offset_bottom = 220.0
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+theme_override_constants/separation = 6
+
+[node name="Clock" type="Label" parent="Margin/VBox"]
+text = "GODZ. 08:00"
+
+[node name="Day" type="Label" parent="Margin/VBox"]
+text = "Dzień 1"
+
+[node name="Money" type="Label" parent="Margin/VBox"]
+text = "SALDO: 500 zł"
+
+[node name="Reputation" type="Label" parent="Margin/VBox"]
+text = "REPUTACJA: 50%"
+
+[node name="Tickets" type="Label" parent="Margin/VBox"]
+text = "MANDATY: 0"
+
+[node name="Vehicle" type="Label" parent="Margin/VBox"]
+text = "POJAZD: —"
+
+[node name="GameTimeTimer" type="Timer" parent="."]
+wait_time = 8.0
+autostart = true
