@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brr7uae0j4r4j"
-path.s3tc="res://.godot/imported/Parking_map_asphalt-tarmac-1_bump.jpg-20e7e5700f08b8bdddc3d329c7771c13.s3tc.ctex"
+uid="uid://cvdf0xt6i0e5b"
+path.s3tc="res://.godot/imported/van2_GradientTexture.jpg-2bec6972b9a874d3f378644de37b7c61.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "d8502d218e143c25b72169d01b9afaec"
+"md5": "907dccfbdcb94120d767dd48dcf43065"
 }
 
 [deps]
 
-source_file="res://maps/Parking_map_asphalt-tarmac-1_bump.jpg"
-dest_files=["res://.godot/imported/Parking_map_asphalt-tarmac-1_bump.jpg-20e7e5700f08b8bdddc3d329c7771c13.s3tc.ctex"]
+source_file="res://vehicles/van2_GradientTexture.jpg"
+dest_files=["res://.godot/imported/van2_GradientTexture.jpg-2bec6972b9a874d3f378644de37b7c61.s3tc.ctex"]
 
 [params]
 
@@ -25,7 +25,7 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1

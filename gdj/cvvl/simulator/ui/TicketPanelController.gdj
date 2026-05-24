@@ -23,6 +23,7 @@ properties = [
 ]
 functions = [
     _ready,
+	_process,
 	open_for_vehicle,
 	hide_panel,
 	on_fine_clicked,

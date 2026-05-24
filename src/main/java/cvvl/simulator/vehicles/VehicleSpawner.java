@@ -21,25 +21,45 @@ import java.util.List;
 
 @RegisterClass
 public class VehicleSpawner extends Node3D {
-	/** Wrzuć model do folderu vehicles/ w katalogu projektu (patrz vehicles/README.md). */
-	private static final String CUSTOM_VEHICLE_MODEL = "res://vehicles/car.glb";
+	private static final String VEHICLES_DIR = "res://vehicles/";
+	private static final String DEFAULT_MODEL_FILE = "car.glb";
 	private static final Vector3 PLACEHOLDER_COLLISION_SIZE = new Vector3(1.8f, 1.2f, 3.6f);
 
-	private static final String[] SPOT_NAMES = {"parking_01", "parking_02", "parking_03"};
+	private static final String[] SPOT_NAMES = {
+			"parking_01", "parking_02", "parking_03",
+			"parking_04", "parking_05", "parking_06",
+			"parking_07", "parking_08", "parking_09"
+	};
+	private static final String[] SPOT_MODEL_FILES = {
+			"sedan1.glb", "sedan2.glb", "sedan3.glb",
+			"van2.glb", "van2.glb", "van3.glb",
+			"suv1.glb", "suv2.glb", "suv3.glb"
+	};
 	private static final String[] SPOT_TYPES = {"standard", "disabled", "delivery"};
 	private static final String[] PLATE_PREFIX = {"KR", "WW", "GD", "PO", "WA"};
 
 	private final RandomNumberGenerator rng = new RandomNumberGenerator();
 	private final List<Vehicle> spawned = new ArrayList<>();
+	private boolean hasSpawned = false;
 
 	@RegisterFunction
 	@Override
 	public void _ready() {
 		rng.randomize();
-		for (String spotName : SPOT_NAMES) {
-			Node3D marker = (Node3D) getNodeOrNull(spotName);
-			if (marker instanceof Marker3D parkingSpot) {
-				spawnAt(parkingSpot, spotName);
+	}
+
+	@RegisterFunction
+	public void spawnAllVehicles() {
+		if (hasSpawned) {
+			return;
+		}
+		hasSpawned = true;
+
+		for (int i = 0; i < SPOT_NAMES.length; i++) {
+			String spotName = SPOT_NAMES[i];
+			Marker3D marker = findParkingMarker(spotName);
+			if (marker != null) {
+				spawnAt(marker, spotName, modelFileForSpotIndex(i));
 			}
 		}
 	}
@@ -49,10 +69,39 @@ public class VehicleSpawner extends Node3D {
 		return spawned;
 	}
 
-	private void spawnAt(Marker3D spot, String spotName) {
+	private Marker3D findParkingMarker(String spotName) {
+		Node node = getNodeOrNull(spotName);
+		if (node instanceof Marker3D marker) {
+			return marker;
+		}
+		for (int i = 0; i < getChildCount(); i++) {
+			Node child = getChild(i);
+			if (spotName.equals(child.getName()) && child instanceof Marker3D marker) {
+				return marker;
+			}
+		}
+		return null;
+	}
+
+	private static String modelFileForSpotIndex(int index) {
+		if (index >= 0 && index < SPOT_MODEL_FILES.length) {
+			return SPOT_MODEL_FILES[index];
+		}
+		return DEFAULT_MODEL_FILE;
+	}
+
+	private static String resolveModelPath(String modelFile) {
+		String path = VEHICLES_DIR + modelFile;
+		if (ResourceLoader.exists(path)) {
+			return path;
+		}
+		String fallback = VEHICLES_DIR + DEFAULT_MODEL_FILE;
+		return ResourceLoader.exists(fallback) ? fallback : path;
+	}
+
+	private void spawnAt(Marker3D spot, String spotName, String modelFile) {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Vehicle_" + spotName);
-		vehicle.setGlobalTransform(spot.getGlobalTransform());
 
 		vehicle.vehicleId = "V-" + rng.randiRange(1000, 9999);
 		vehicle.plate = randomPlate();
@@ -65,20 +114,27 @@ public class VehicleSpawner extends Node3D {
 
 		VehicleModelHelper.configureVehiclePhysics(vehicle);
 		addCollisionShape(vehicle, PLACEHOLDER_COLLISION_SIZE, new Vector3(0, 0, 0));
+		VehicleModelHelper.ensureInspectableCollision(vehicle);
 
-		if (!buildVisualFromCustomModel(vehicle)) {
+		if (!buildVisualFromModel(vehicle, resolveModelPath(modelFile))) {
 			buildPlaceholderVisual(vehicle, randomCarColor());
 		}
 		vehicle.syncFineStatusFromGameState();
+
+		// Ten sam rodzic co markery — kopia lokalnego transformu parking_XX
 		addChild(vehicle);
+		vehicle.setTransform(spot.getTransform());
+
+		Vector3 markerGlobal = spot.getGlobalPosition();
+		VehicleModelHelper.placeOnGroundAt(vehicle, markerGlobal);
 		spawned.add(vehicle);
 	}
 
-	private boolean buildVisualFromCustomModel(Vehicle vehicle) {
-		if (!ResourceLoader.exists(CUSTOM_VEHICLE_MODEL)) {
+	private boolean buildVisualFromModel(Vehicle vehicle, String modelPath) {
+		if (!ResourceLoader.exists(modelPath)) {
 			return false;
 		}
-		godot.api.Resource resource = ResourceLoader.load(CUSTOM_VEHICLE_MODEL);
+		godot.api.Resource resource = ResourceLoader.load(modelPath);
 		if (!(resource instanceof PackedScene scene)) {
 			return false;
 		}

@@ -27,5 +27,7 @@ functions = [
 	close_in_game_submenu,
 	capture_player_transform,
 	is_paused,
-	on_vehicle_targeted
+	finish_player_spawn,
+	on_vehicle_targeted,
+	open_ticket_for_vehicle
 ]

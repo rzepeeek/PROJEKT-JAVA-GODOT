@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cycd8tpctjlqo"
-path.s3tc="res://.godot/imported/Parking_map_asphalt_14_normal.jpg-77befbc66a5fe028e03b772921d564a7.s3tc.ctex"
+uid="uid://dioflgl881557"
+path.s3tc="res://.godot/imported/Parking_map_panel_normal_5.png-b786f13dfa3c46f1d27bd4270ac51df1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "9fbcac7d9b7eb6a0b82cf68d63e3b232"
+"md5": "9ac4d108700d5aaa3dd42e012241158f"
 }
 
 [deps]
 
-source_file="res://maps/Parking_map_asphalt_14_normal.jpg"
-dest_files=["res://.godot/imported/Parking_map_asphalt_14_normal.jpg-77befbc66a5fe028e03b772921d564a7.s3tc.ctex"]
+source_file="res://maps/Parking_map_panel_normal_5.png"
+dest_files=["res://.godot/imported/Parking_map_panel_normal_5.png-b786f13dfa3c46f1d27bd4270ac51df1.s3tc.ctex"]
 
 [params]
 
@@ -25,7 +25,7 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1

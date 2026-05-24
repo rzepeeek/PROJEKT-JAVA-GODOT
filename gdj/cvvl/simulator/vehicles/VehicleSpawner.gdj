@@ -20,5 +20,6 @@ properties = [
 ]
 functions = [
     _ready,
+	spawn_all_vehicles,
 	get_spawned_vehicles
 ]

@@ -1,6 +1,7 @@
 package cvvl.simulator.ui;
 
 import cvvl.simulator.GameState;
+import cvvl.simulator.player.PlayerInteraction;
 import cvvl.simulator.vehicles.ParkingViolation;
 import cvvl.simulator.vehicles.Vehicle;
 import godot.annotation.RegisterClass;
@@ -23,6 +24,7 @@ public class TicketPanelController extends PanelContainer {
 	private Control actionsRow;
 	private Label fineBlockedLabel;
 	private Vehicle activeVehicle;
+	private PlayerInteraction playerInteraction;
 
 	@RegisterFunction
 	@Override
@@ -50,10 +52,28 @@ public class TicketPanelController extends PanelContainer {
 			fineBlockedLabel.setVisible(false);
 		}
 		hidePanel();
+		resolvePlayerInteraction();
+	}
+
+	@RegisterFunction
+	@Override
+	public void _process(double delta) {
+		if (!isVisible() || activeVehicle == null) {
+			return;
+		}
+		if (playerInteraction == null) {
+			resolvePlayerInteraction();
+		}
+		if (playerInteraction == null || !playerInteraction.isVehicleWithinInspectDistance(activeVehicle)) {
+			hidePanel();
+		}
 	}
 
 	@RegisterFunction
 	public void openForVehicle(Vehicle vehicle) {
+		if (vehicle == null) {
+			return;
+		}
 		activeVehicle = vehicle;
 		vehicleIdLabel.setText(vehicle.vehicleId);
 		plateLabel.setText(vehicle.plate);
@@ -63,9 +83,9 @@ public class TicketPanelController extends PanelContainer {
 			fineSubmenu.setVisible(false);
 		}
 		updateFineControls(vehicle);
-		setModulate(new godot.core.Color(1, 1, 1, 1));
 		setVisible(true);
-		DispatchUi.slideIn(this, 40f, 0.3f);
+		setModulate(new godot.core.Color(1, 1, 1, 1));
+		setProcessMode(godot.api.Node.ProcessMode.ALWAYS);
 
 		if (GameState.instance != null) {
 			GameState.instance.setCurrentVehiclePlate(vehicle.plate);
@@ -76,6 +96,7 @@ public class TicketPanelController extends PanelContainer {
 	public void hidePanel() {
 		setVisible(false);
 		setModulate(new godot.core.Color(1, 1, 1, 1));
+		setProcessMode(godot.api.Node.ProcessMode.INHERIT);
 		if (fineSubmenu != null) {
 			fineSubmenu.setVisible(false);
 		}
@@ -88,6 +109,9 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onFineClicked() {
+		if (activeVehicle == null) {
+			return;
+		}
 		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
@@ -98,6 +122,9 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onWarningClicked() {
+		if (activeVehicle == null) {
+			return;
+		}
 		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
@@ -107,6 +134,9 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onIgnoreClicked() {
+		if (activeVehicle == null) {
+			return;
+		}
 		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
@@ -139,6 +169,9 @@ public class TicketPanelController extends PanelContainer {
 	}
 
 	private void applyFine(ParkingViolation chosen) {
+		if (activeVehicle == null) {
+			return;
+		}
 		if (isAlreadyFined(activeVehicle)) {
 			return;
 		}
@@ -224,6 +257,21 @@ public class TicketPanelController extends PanelContainer {
 		Button button = (Button) getNode(path);
 		DispatchUi.styleDispatchButton(button);
 		button.connect("pressed", new MethodCallable0<Void>(this, StringNames.toGodotName(method), new Object[0]));
+	}
+
+	private void resolvePlayerInteraction() {
+		Node ui = getParent();
+		if (ui == null) {
+			return;
+		}
+		Node game = ui.getParent();
+		if (game == null) {
+			return;
+		}
+		Node node = game.getNodeOrNull("Player/Interaction");
+		if (node instanceof PlayerInteraction interaction) {
+			playerInteraction = interaction;
+		}
 	}
 
 	private void releaseGameplayMouse() {

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpcunef1fh6h7"
-path.s3tc="res://.godot/imported/Parking_map_asphalt-tarmac-1_diffuse.jpg-79298be43b76e1d57e3d07e3667fa073.s3tc.ctex"
+uid="uid://kf8rf72rr64"
+path.s3tc="res://.godot/imported/sedan2_grill.jpg-ca1c8999c6ba3e1310701f1cd93eebda.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "8f1352bc068048271a9bc11a21b94570"
+"md5": "ee2c54a7badbfe581bd1a04cd5599f43"
 }
 
 [deps]
 
-source_file="res://maps/Parking_map_asphalt-tarmac-1_diffuse.jpg"
-dest_files=["res://.godot/imported/Parking_map_asphalt-tarmac-1_diffuse.jpg-79298be43b76e1d57e3d07e3667fa073.s3tc.ctex"]
+source_file="res://vehicles/sedan2_grill.jpg"
+dest_files=["res://.godot/imported/sedan2_grill.jpg-ca1c8999c6ba3e1310701f1cd93eebda.s3tc.ctex"]
 
 [params]
 
@@ -25,12 +25,12 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://vehicles/sedan2_grill.jpg"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

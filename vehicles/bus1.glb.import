@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://6naef2rewe30"
-path="res://.godot/imported/Parking_map.glb-3281566721cc9333a34a521479ed393b.scn"
+uid="uid://dytacvn4atkgv"
+path="res://.godot/imported/bus1.glb-4272d998baa9d6c2a0eab1c55cbbcb1a.scn"
 
 [deps]
 
-source_file="res://maps/Parking_map.glb"
-dest_files=["res://.godot/imported/Parking_map.glb-3281566721cc9333a34a521479ed393b.scn"]
+source_file="res://vehicles/bus1.glb"
+dest_files=["res://.godot/imported/bus1.glb-4272d998baa9d6c2a0eab1c55cbbcb1a.scn"]
 
 [params]
 
@@ -37,6 +37,12 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"nodes": {
+"PATH:Low poly plymouth car": {
+"generate/physics": true
+}
+}
+}
 gltf/naming_version=2
 gltf/embedded_image_handling=1

@@ -20,6 +20,8 @@ properties = [
 functions = [
     _ready,
 	_process,
-	_unhandled_input,
-	get_current_target
+	handle_inspect_input,
+	get_current_target,
+	can_inspect_vehicle,
+	is_vehicle_within_inspect_distance
 ]

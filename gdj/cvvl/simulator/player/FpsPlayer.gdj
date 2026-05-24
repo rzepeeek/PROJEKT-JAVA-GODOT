@@ -27,6 +27,7 @@ properties = [
 ]
 functions = [
     _ready,
+	snap_to_ground,
 	set_gameplay_enabled,
 	_input,
 	_physics_process,

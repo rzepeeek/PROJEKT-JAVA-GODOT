@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://6naef2rewe30"
-path="res://.godot/imported/Parking_map.glb-3281566721cc9333a34a521479ed393b.scn"
+uid="uid://chsron1e3vm72"
+path="res://.godot/imported/sedan2.glb-8ec4b047290261eb49200e9b00db8431.scn"
 
 [deps]
 
-source_file="res://maps/Parking_map.glb"
-dest_files=["res://.godot/imported/Parking_map.glb-3281566721cc9333a34a521479ed393b.scn"]
+source_file="res://vehicles/sedan2.glb"
+dest_files=["res://.godot/imported/sedan2.glb-8ec4b047290261eb49200e9b00db8431.scn"]
 
 [params]
 

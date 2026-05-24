@@ -54,6 +54,7 @@ public class GameWorldController extends Node {
 		}
 
 		player.setMouseCaptured(true);
+		callDeferred(StringNames.toGodotName("finishPlayerSpawn"));
 
 		if (GameState.instance != null && GameState.instance.reopenPauseAfterReturn) {
 			GameState.instance.reopenPauseAfterReturn = false;
@@ -185,8 +186,20 @@ public class GameWorldController extends Node {
 	}
 
 	@RegisterFunction
+	public void finishPlayerSpawn() {
+		if (player != null) {
+			player.snapToGround();
+		}
+	}
+
+	@RegisterFunction
 	public void onVehicleTargeted(Vehicle vehicle) {
-		if (paused) {
+		openTicketForVehicle(vehicle);
+	}
+
+	@RegisterFunction
+	public void openTicketForVehicle(Vehicle vehicle) {
+		if (paused || vehicle == null) {
 			return;
 		}
 		ticketPanel.openForVehicle(vehicle);

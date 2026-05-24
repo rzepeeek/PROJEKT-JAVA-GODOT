@@ -51,6 +51,37 @@ light_energy = 1.8
 shadow_enabled = true
 
 [node name="ParkingMap" parent="World" unique_id=127148089 instance=ExtResource("9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15097618, -0.64403266, 0.12905884)
+
+[node name="VehicleSpawner" type="Node3D" parent="World/ParkingMap" unique_id=513456868]
+script = ExtResource("2")
+
+[node name="parking_01" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=115645249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.05177, -0.30311877, -10.72773)
+
+[node name="parking_02" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1196219612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.743174, 0.701909, -10.687744)
+
+[node name="parking_03" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=2142324666]
+transform = Transform3D(0.018499345, 0, -0.99982893, 0, 1, 0, 0.99982893, 0, 0.018499345, -37.421814, 0.6387837, -2.222311)
+
+[node name="parking_04" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1562538934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.58777, 0.7694997, -10.619087)
+
+[node name="parking_05" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=950367728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.150028, 0.6387837, -10.628679)
+
+[node name="parking_06" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=589527495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.90007, 0.70229506, -10.662829)
+
+[node name="parking_07" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1552788711]
+transform = Transform3D(-0.010925569, 0, 0.9999403, 0, 1, 0, -0.9999403, 0, -0.010925569, -37.505417, 0.6902452, 0.25208122)
+
+[node name="parking_08" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=926575297]
+transform = Transform3D(0.056971636, 0, -0.9983758, 0, 1, 0, 0.9983758, 0, 0.056971636, -37.10932, 0.6387837, -8.032993)
+
+[node name="parking_09" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1419727747]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -37.59137, 0.67585605, -4.7002425)
 
 [node name="Ground" type="StaticBody3D" parent="World" unique_id=221849856]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -63,20 +94,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ground")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground" unique_id=600186877]
 shape = SubResource("BoxShape3D_ground")
 
-[node name="VehicleSpawner" type="Node3D" parent="World" unique_id=513456868]
-script = ExtResource("2")
-
-[node name="parking_01" type="Marker3D" parent="World/VehicleSpawner" unique_id=1548746632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -6)
-
-[node name="parking_02" type="Marker3D" parent="World/VehicleSpawner" unique_id=89343563]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
-
-[node name="parking_03" type="Marker3D" parent="World/VehicleSpawner" unique_id=1923326572]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -6)
-
 [node name="Player" parent="." unique_id=2044890080 instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1615137793]
 
@@ -106,5 +125,5 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.55, 0.85, 0.95, 1)
 theme_override_font_sizes/font_size = 14
-text = "[E] Inspekcja pojazdu  |  [ESC] Pauza"
+text = "[E] / LPM — mandat (~3 m, celuj w auto)  |  [ESC] Pauza"
 horizontal_alignment = 1

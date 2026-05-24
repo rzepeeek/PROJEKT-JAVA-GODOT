@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fhnud5vpuown"
-path.s3tc="res://.godot/imported/Parking_map_asphalt_14_metallic-asphalt_14_roughness.png-531e74b311490277ac343ba9b42d1d4d.s3tc.ctex"
+uid="uid://cfxm2v3kstii3"
+path.s3tc="res://.godot/imported/sedan2_GradientTexture.jpg-94f6b9ae2f4da9a8e5425d3142b699f7.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "b0f395965e3ef1458848202b794fa809"
+"md5": "907dccfbdcb94120d767dd48dcf43065"
 }
 
 [deps]
 
-source_file="res://maps/Parking_map_asphalt_14_metallic-asphalt_14_roughness.png"
-dest_files=["res://.godot/imported/Parking_map_asphalt_14_metallic-asphalt_14_roughness.png-531e74b311490277ac343ba9b42d1d4d.s3tc.ctex"]
+source_file="res://vehicles/sedan2_GradientTexture.jpg"
+dest_files=["res://.godot/imported/sedan2_GradientTexture.jpg-94f6b9ae2f4da9a8e5425d3142b699f7.s3tc.ctex"]
 
 [params]
 

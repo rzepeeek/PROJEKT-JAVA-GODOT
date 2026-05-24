@@ -1,19 +1,24 @@
 package cvvl.simulator.world;
 
+import cvvl.simulator.vehicles.VehicleSpawner;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
+import godot.api.BoxShape3D;
+import godot.api.CollisionShape3D;
 import godot.api.MeshInstance3D;
 import godot.api.Node;
 import godot.api.Node3D;
+import godot.api.StaticBody3D;
 import godot.core.AABB;
 import godot.core.Transform3D;
 import godot.core.Vector3;
 
 /**
- * Po wczytaniu GLB ustawia mapę na podłożu (Y=0) i centruje w XZ.
+ * Po wczytaniu GLB ustawia mapę na podłożu (Y=0), centruje w XZ i dodaje płaską kolizję podłoża.
  */
 @RegisterClass
 public class ParkingMapBootstrap extends Node3D {
+	private static final int GROUND_LAYER = 1;
 
 	@RegisterFunction
 	@Override
@@ -38,6 +43,41 @@ public class ParkingMapBootstrap extends Node3D {
 				(float) pos.getY() - (float) min.getY(),
 				(float) pos.getZ() - (float) center.getZ()
 		));
+
+		ensureMapFloor((float) size.getX(), (float) size.getZ());
+		spawnVehiclesOnMap();
+	}
+
+	private void spawnVehiclesOnMap() {
+		for (int i = 0; i < getChildCount(); i++) {
+			Node child = getChild(i);
+			if (child instanceof VehicleSpawner spawner) {
+				spawner.spawnAllVehicles();
+				return;
+			}
+		}
+	}
+
+	private void ensureMapFloor(float mapWidth, float mapDepth) {
+		if (getNodeOrNull("MapFloor") != null) {
+			return;
+		}
+
+		float width = Math.max(24f, mapWidth + 6f);
+		float depth = Math.max(24f, mapDepth + 6f);
+
+		StaticBody3D floor = new StaticBody3D();
+		floor.setName("MapFloor");
+		floor.setCollisionLayer(GROUND_LAYER);
+		floor.setCollisionMask(0);
+
+		CollisionShape3D collision = new CollisionShape3D();
+		BoxShape3D shape = new BoxShape3D();
+		shape.setSize(new Vector3(width, 0.35f, depth));
+		collision.setShape(shape);
+		collision.setPosition(new Vector3(0f, -0.18f, 0f));
+		floor.addChild(collision);
+		addChild(floor);
 	}
 
 	private static AABB computeBounds(Node3D space, Node root) {
