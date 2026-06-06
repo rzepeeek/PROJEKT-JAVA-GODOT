@@ -25,16 +25,39 @@ public class VehicleSpawner extends Node3D {
 	private static final String DEFAULT_MODEL_FILE = "car.glb";
 	private static final Vector3 PLACEHOLDER_COLLISION_SIZE = new Vector3(1.8f, 1.2f, 3.6f);
 
-	private static final String[] SPOT_NAMES = {
-			"parking_01", "parking_02", "parking_03",
-			"parking_04", "parking_05", "parking_06",
-			"parking_07", "parking_08", "parking_09"
-	};
-	private static final String[] SPOT_MODEL_FILES = {
-			"sedan1.glb", "sedan2.glb", "sedan3.glb",
-			"van2.glb", "van2.glb", "van3.glb",
-			"suv1.glb", "suv2.glb", "suv3.glb"
-	};
+private static final String[] SPOT_NAMES = {
+		"parking_01", "parking_02", "parking_03", "parking_04", "parking_05",
+		"parking_06", "parking_07", "parking_08", "parking_09", "parking_10",
+		"parking_11", "parking_12", "parking_13", "parking_14", "parking_15",
+		"parking_16", "parking_17", "parking_18", "parking_19", "parking_20",
+		"parking_21", "parking_22", "parking_23", "parking_24", "parking_25",
+		"parking_26", "parking_27", "parking_28", "parking_29", "parking_30",
+		"parking_31", "parking_32", "parking_33", "parking_34", "parking_35",
+		"parking_36", "parking_37", "parking_38", "parking_39", "parking_40",
+		"parking_41", "parking_42", "parking_43", "parking_44", "parking_45",
+		"parking_46", "parking_47", "parking_48", "parking_49", "parking_50",
+		"parking_51", "parking_52", "parking_53", "parking_54", "parking_55",
+		"parking_56", "parking_57", "parking_58", "parking_59", "parking_60",
+		"parking_61", "parking_62", "parking_63", "parking_64", "parking_65",
+		"parking_66", "parking_67", "parking_68", "parking_69", "parking_70",
+		"parking_71", "parking_72", "parking_73", "parking_74", "parking_75",
+		"parking_76", "parking_77", "parking_78", "parking_79", "parking_80",
+		"parking_81", "parking_82", "parking_83", "parking_84", "parking_85",
+		"parking_86", "parking_87", "parking_88", "parking_89", "parking_90",
+		"parking_91", "parking_92", "parking_93", "parking_94", "parking_95",
+		"parking_96", "parking_97", "parking_98", "parking_99", "parking_100",
+		"parking_101", "parking_102", "parking_103", "parking_104", "parking_105",
+		"parking_106", "parking_107"
+};
+private static final String[] SPOT_MODEL_FILES = {
+		"sedan1.glb",
+		"sedan2.glb",
+		"sedan3.glb",
+		"bus1.glb",
+		"bus2.glb",
+		"bus3.glb",
+		"suv1.glb"
+};
 	private static final String[] SPOT_TYPES = {"standard", "disabled", "delivery"};
 	private static final String[] PLATE_PREFIX = {"KR", "WW", "GD", "PO", "WA"};
 
@@ -48,21 +71,28 @@ public class VehicleSpawner extends Node3D {
 		rng.randomize();
 	}
 
-	@RegisterFunction
-	public void spawnAllVehicles() {
-		if (hasSpawned) {
-			return;
-		}
-		hasSpawned = true;
+@RegisterFunction
+public void spawnAllVehicles() {
+	if (hasSpawned) {
+		return;
+	}
+	hasSpawned = true;
 
-		for (int i = 0; i < SPOT_NAMES.length; i++) {
-			String spotName = SPOT_NAMES[i];
-			Marker3D marker = findParkingMarker(spotName);
-			if (marker != null) {
-				spawnAt(marker, spotName, modelFileForSpotIndex(i));
-			}
+	for (int i = 0; i < SPOT_NAMES.length; i++) {
+
+		// 75% szans na zajęcie miejsca
+		if (rng.randf() > 0.55f) {
+			continue;
+		}
+
+		String spotName = SPOT_NAMES[i];
+		Marker3D marker = findParkingMarker(spotName);
+
+		if (marker != null) {
+			spawnAt(marker, spotName, modelFileForSpotIndex());
 		}
 	}
+}
 
 	@RegisterFunction
 	public List<Vehicle> getSpawnedVehicles() {
@@ -83,11 +113,10 @@ public class VehicleSpawner extends Node3D {
 		return null;
 	}
 
-	private static String modelFileForSpotIndex(int index) {
-		if (index >= 0 && index < SPOT_MODEL_FILES.length) {
-			return SPOT_MODEL_FILES[index];
-		}
-		return DEFAULT_MODEL_FILE;
+	private String modelFileForSpotIndex() {
+	return SPOT_MODEL_FILES[
+			rng.randiRange(0, SPOT_MODEL_FILES.length - 1)
+	];
 	}
 
 	private static String resolveModelPath(String modelFile) {

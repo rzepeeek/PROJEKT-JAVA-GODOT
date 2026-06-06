@@ -51,7 +51,7 @@ light_energy = 1.8
 shadow_enabled = true
 
 [node name="ParkingMap" parent="World" unique_id=127148089 instance=ExtResource("9")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15097618, -0.64403266, 0.12905884)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1619587, -0.64402837, -0.108982086)
 
 [node name="VehicleSpawner" type="Node3D" parent="World/ParkingMap" unique_id=513456868]
 script = ExtResource("2")
@@ -59,29 +59,314 @@ script = ExtResource("2")
 [node name="parking_01" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=115645249]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.05177, -0.30311877, -10.72773)
 
-[node name="parking_02" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1196219612]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.743174, 0.701909, -10.687744)
-
-[node name="parking_03" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=2142324666]
-transform = Transform3D(0.018499345, 0, -0.99982893, 0, 1, 0, 0.99982893, 0, 0.018499345, -37.421814, 0.6387837, -2.222311)
-
 [node name="parking_04" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1562538934]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.58777, 0.7694997, -10.619087)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.463552, 0.7694997, -10.619087)
 
 [node name="parking_05" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=950367728]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.150028, 0.6387837, -10.628679)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.917322, 0.6387837, -10.628679)
 
 [node name="parking_06" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=589527495]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.90007, 0.70229506, -10.662829)
-
-[node name="parking_07" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1552788711]
-transform = Transform3D(-0.010925569, 0, 0.9999403, 0, 1, 0, -0.9999403, 0, -0.010925569, -37.505417, 0.6902452, 0.25208122)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.069824, 0.70229506, -10.662829)
 
 [node name="parking_08" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=926575297]
-transform = Transform3D(0.056971636, 0, -0.9983758, 0, 1, 0, 0.9983758, 0, 0.056971636, -37.10932, 0.6387837, -8.032993)
+transform = Transform3D(0.056971636, 0, -0.9983758, 0, 1, 0, 0.9983758, 0, 0.056971636, -37.10932, 0.6387837, -6.559409)
 
 [node name="parking_09" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1419727747]
-transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -37.59137, 0.67585605, -4.7002425)
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -37.59137, 0.67585605, -3.9440193)
+
+[node name="parking_10" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1907656810]
+transform = Transform3D(-0.031410817, 0, 0.99950653, 0, 1, 0, -0.99950653, 0, -0.031410817, -26.306406, 0.702, 26.789)
+
+[node name="parking_11" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1887888451]
+transform = Transform3D(-0.031410817, 0, 0.99950653, 0, 1, 0, -0.99950653, 0, -0.031410817, -26.782015, 0.702, 29.406649)
+
+[node name="parking_12" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=201414357]
+transform = Transform3D(0.046984494, 0, -0.99889565, 0, 1, 0, 0.99889565, 0, 0.046984494, -26.256592, 0.702, 32.09818)
+
+[node name="parking_13" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1314161667]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -26.229738, 0.702, 35.134083)
+
+[node name="parking_14" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1831099756]
+transform = Transform3D(0.022739727, 0, -0.99974144, 0, 1, 0, 0.99974144, 0, 0.022739727, -26.565424, 0.702, 38.06206)
+
+[node name="parking_15" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1455211594]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -26.405214, 0.702, 40.8364)
+
+[node name="parking_16" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1664138783]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -26.406227, 0.702, 43.735435)
+
+[node name="parking_17" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=606902765]
+transform = Transform3D(0.007295437, 0, -0.9999734, 0, 1, 0, 0.9999734, 0, 0.007295437, -26.607182, 0.702, 46.689648)
+
+[node name="parking_18" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1622093090]
+transform = Transform3D(0.0025133453, 0, -0.99999684, 0, 1, 0, 0.99999684, 0, 0.0025133453, -26.392601, 0.702, 49.95977)
+
+[node name="parking_19" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=430304778]
+transform = Transform3D(-0.11367146, 0, 0.99351835, 0, 1, 0, -0.99351835, 0, -0.11367146, -39.372597, 0.702, 46.815483)
+
+[node name="parking_20" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=116778166]
+transform = Transform3D(-0.15312381, 0, -0.988207, 0, 1, 0, 0.988207, 0, -0.15312381, -43.557922, 0.702, 46.85257)
+
+[node name="parking_21" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=2015666243]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -39.26583, 0.702, 43.887283)
+
+[node name="parking_22" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1654806519]
+transform = Transform3D(0.5760757, 0, 0.81739634, 0, 1, 0, -0.81739634, 0, 0.5760757, -39.485237, 0.702, 40.95804)
+
+[node name="parking_23" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1863768671]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -39.341637, 0.702, 38.16661)
+
+[node name="parking_24" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=943976200]
+transform = Transform3D(0.07638833, 0, 0.9970781, 0, 1, 0, -0.9970781, 0, 0.07638833, -39.440834, 0.702, 35.198963)
+
+[node name="parking_25" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1849463942]
+transform = Transform3D(-0.035056423, 0, -0.99938536, 0, 1, 0, 0.99938536, 0, -0.035056423, -39.226517, 0.702, 32.209595)
+
+[node name="parking_26" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=324580438]
+transform = Transform3D(-0.07960743, 0, -0.9968263, 0, 1, 0, 0.9968263, 0, -0.07960743, -39.342094, 0.702, 29.445847)
+
+[node name="parking_27" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=859537406]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -39.393143, 0.702, 26.870419)
+
+[node name="parking_28" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=738599501]
+transform = Transform3D(-0.0705572, 0, -0.99750775, 0, 1, 0, 0.99750775, 0, -0.0705572, -43.557922, 0.702, 43.759018)
+
+[node name="parking_29" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=556162834]
+transform = Transform3D(-0.09704447, 0, 0.99528, 0, 1, 0, -0.99528, 0, -0.09704447, -43.557922, 0.702, 40.950424)
+
+[node name="parking_30" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=340518512]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -43.446953, 0.702, 38.135544)
+
+[node name="parking_31" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=31538757]
+transform = Transform3D(-0.11297783, 0, 0.9935975, 0, 1, 0, -0.9935975, 0, -0.11297783, -43.557922, 0.702, 35.13937)
+
+[node name="parking_32" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=872961575]
+transform = Transform3D(-0.03107916, 0, -0.9995169, 0, 1, 0, 0.9995169, 0, -0.03107916, -43.694946, 0.702, 32.108463)
+
+[node name="parking_33" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1874810672]
+transform = Transform3D(-0.03545767, 0, -0.9993712, 0, 1, 0, 0.9993712, 0, -0.03545767, -43.557922, 0.702, 29.39318)
+
+[node name="parking_34" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=89036555]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -43.97844, 0.702, 26.79811)
+
+[node name="parking_35" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1610894004]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -55.964973, 0.702, 26.819746)
+
+[node name="parking_36" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=573547784]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -55.831093, 0.702, 29.468897)
+
+[node name="parking_37" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=49883287]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -56.20591, 0.702, 32.163055)
+
+[node name="parking_38" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1112863972]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -56.038177, 0.702, 35.13902)
+
+[node name="parking_39" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1491329366]
+transform = Transform3D(-0.08778171, 0, 0.99613976, 0, 1, 0, -0.99613976, 0, -0.08778171, -56.221413, 0.702, 38.099995)
+
+[node name="parking_40" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1396748474]
+transform = Transform3D(-0.05557759, 0, 0.99845433, 0, 1, 0, -0.99845433, 0, -0.05557759, -55.88764, 0.702, 41.028896)
+
+[node name="parking_41" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=609971261]
+transform = Transform3D(-0.04794319, 0, -0.99885005, 0, 1, 0, 0.99885005, 0, -0.04794319, -56.132294, 0.702, 43.691494)
+
+[node name="parking_42" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1457471797]
+transform = Transform3D(-0.37832543, 0, -0.9256726, 0, 1, 0, 0.9256726, 0, -0.37832543, -56.00882, 0.702, 46.72166)
+
+[node name="parking_43" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=42641675]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, -56.105255, 0.702, 49.681206)
+
+[node name="parking_44" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=753619741]
+transform = Transform3D(-0.99660873, 0, -0.0822864, 0, 1, 0, 0.0822864, 0, -0.99660873, 73.14466, 0.702, 47.017002)
+
+[node name="parking_45" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1852948217]
+transform = Transform3D(0.99359554, 0, 0.11299518, 0, 1, 0, -0.11299518, 0, 0.99359554, 75.96709, 0.702, 47.21143)
+
+[node name="parking_46" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=601087626]
+transform = Transform3D(-0.9985545, 0, 0.053747643, 0, 1, 0, -0.053747643, 0, -0.9985545, 78.55893, 0.702, 47.15536)
+
+[node name="parking_47" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=570991759]
+transform = Transform3D(0.99925953, 0, -0.03847496, 0, 1, 0, 0.03847496, 0, 0.99925953, 72.95869, 0.702, 42.088398)
+
+[node name="parking_48" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1415796333]
+transform = Transform3D(-0.9999013, 0, -0.014049515, 0, 1, 0, 0.014049515, 0, -0.9999013, 75.81882, 0.702, 41.97517)
+
+[node name="parking_49" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=391507742]
+transform = Transform3D(-0.999532, 0, 0.030590814, 0, 1, 0, -0.030590814, 0, -0.999532, 78.75033, 0.702, 41.860435)
+
+[node name="parking_50" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=217155492]
+transform = Transform3D(0.9996592, 0, -0.026107086, 0, 1, 0, 0.026107086, 0, 0.9996592, 90.97572, 0.702, 41.83716)
+
+[node name="parking_51" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1661076157]
+transform = Transform3D(-0.9997398, 0, 0.022809466, 0, 1, 0, -0.022809466, 0, -0.9997398, 93.607895, 0.702, 42.122005)
+
+[node name="parking_52" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=131915530]
+transform = Transform3D(-0.99981195, 0, -0.019389456, 0, 1, 0, 0.019389456, 0, -0.99981195, 96.61643, 0.702, 42.046253)
+
+[node name="parking_53" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=879362324]
+transform = Transform3D(-0.9989185, 0, -0.04649628, 0, 1, 0, 0.04649628, 0, -0.9989185, 90.82628, 0.702, 48.14407)
+
+[node name="parking_54" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=960764162]
+transform = Transform3D(-0.9995778, 0, -0.029055646, 0, 1, 0, 0.029055646, 0, -0.9995778, 93.81954, 0.702, 48.081604)
+
+[node name="parking_55" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=742333283]
+transform = Transform3D(0.99977595, 0, -0.02116915, 0, 1, 0, 0.02116915, 0, 0.99977595, 96.569336, 0.702, 47.983448)
+
+[node name="parking_56" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=658097085]
+transform = Transform3D(0.9999163, 0, -0.012932418, 0, 1, 0, 0.012932418, 0, 0.9999163, 96.62718, 0.702, 33.98797)
+
+[node name="parking_57" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1883547602]
+transform = Transform3D(0.99944204, 0, -0.033399325, 0, 1, 0, 0.033399325, 0, 0.99944204, 93.77038, 0.702, 34.223125)
+
+[node name="parking_58" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=233836791]
+transform = Transform3D(-0.99997646, 0, 0.0068590436, 0, 1, 0, -0.0068590436, 0, -0.99997646, 91.00725, 0.702, 34.38431)
+
+[node name="parking_59" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1774792470]
+transform = Transform3D(-0.99859095, 0, 0.053067923, 0, 1, 0, -0.053067923, 0, -0.99859095, 96.63273, 0.702, 28.258125)
+
+[node name="parking_60" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1993408613]
+transform = Transform3D(-0.9983946, 0, 0.056640487, 0, 1, 0, -0.056640487, 0, -0.9983946, 93.88408, 0.702, 28.50877)
+
+[node name="parking_61" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1196642949]
+transform = Transform3D(0.99929273, 0, 0.037602976, 0, 1, 0, -0.037602976, 0, 0.99929273, 91.01097, 0.702, 28.437819)
+
+[node name="parking_62" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=2068383611]
+transform = Transform3D(-0.9999324, 0, -0.011623749, 0, 1, 0, 0.011623749, 0, -0.9999324, 78.54656, 0.702, 28.722416)
+
+[node name="parking_63" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=937215368]
+transform = Transform3D(0.99968463, 0, -0.02511261, 0, 1, 0, 0.02511261, 0, 0.99968463, 75.84197, 0.702, 28.666933)
+
+[node name="parking_64" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1952545154]
+transform = Transform3D(0.99970615, 0, 0.024240267, 0, 1, 0, -0.024240267, 0, 0.99970615, 72.9972, 0.702, 28.708778)
+
+[node name="parking_65" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1212725718]
+transform = Transform3D(0.9977115, 0, 0.06761479, 0, 1, 0, -0.06761479, 0, 0.9977115, 78.621994, 0.702, 33.783813)
+
+[node name="parking_66" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=164947336]
+transform = Transform3D(-0.9998691, 0, -0.016178586, 0, 1, 0, 0.016178586, 0, -0.9998691, 75.82762, 0.702, 33.783813)
+
+[node name="parking_67" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=981568319]
+transform = Transform3D(-0.9982419, 0, -0.05927159, 0, 1, 0, 0.05927159, 0, -0.9982419, 73.13512, 0.702, 33.783813)
+
+[node name="parking_68" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1248173464]
+transform = Transform3D(-0.9995798, 0, 0.028985761, 0, 1, 0, -0.028985761, 0, -0.9995798, 73.137985, 0.702, 19.947765)
+
+[node name="parking_69" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=180658681]
+transform = Transform3D(0.99995226, 0, 0.009773696, 0, 1, 0, -0.009773696, 0, 0.99995226, 73.015724, 0.702, 14.337375)
+
+[node name="parking_70" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=511154321]
+transform = Transform3D(-0.9997858, 0, 0.020698054, 0, 1, 0, -0.020698054, 0, -0.9997858, 75.75589, 0.702, 14.760977)
+
+[node name="parking_71" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=286648697]
+transform = Transform3D(0.99919295, 0, 0.040166777, 0, 1, 0, -0.040166777, 0, 0.99919295, 78.48941, 0.702, 14.434154)
+
+[node name="parking_72" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=768651057]
+transform = Transform3D(-0.99963266, 0, -0.027101744, 0, 1, 0, 0.027101744, 0, -0.99963266, 75.86028, 0.702, 19.97047)
+
+[node name="parking_73" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=98072894]
+transform = Transform3D(0.99969375, 0, 0.024746276, 0, 1, 0, -0.024746276, 0, 0.99969375, 78.69409, 0.702, 19.919914)
+
+[node name="parking_74" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=251087779]
+transform = Transform3D(0.9468908, 0, 0.32155523, 0, 1, 0, -0.32155523, 0, 0.9468908, 91.14125, 0.702, 19.764872)
+
+[node name="parking_75" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1449724200]
+transform = Transform3D(-0.99933606, 0, 0.03643436, 0, 1, 0, -0.03643436, 0, -0.99933606, 93.91645, 0.702, 20.007069)
+
+[node name="parking_76" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=556959641]
+transform = Transform3D(0.998984, 0, -0.04506658, 0, 1, 0, 0.04506658, 0, 0.998984, 96.81796, 0.702, 20.077877)
+
+[node name="parking_77" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1117709785]
+transform = Transform3D(0.99962604, 0, 0.027345944, 0, 1, 0, -0.027345944, 0, 0.99962604, 90.85349, 0.702, 14.04895)
+
+[node name="parking_78" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=540690906]
+transform = Transform3D(-0.9974644, 0, 0.07116666, 0, 1, 0, -0.07116666, 0, -0.9974644, 93.74862, 0.702, 14.04608)
+
+[node name="parking_79" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1777201282]
+transform = Transform3D(0.98381627, 0, 0.17918, 0, 1, 0, -0.17918, 0, 0.98381627, 96.55053, 0.702, 14.182214)
+
+[node name="parking_80" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=934246608]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, 60.915718, 0.702, -61.04782)
+
+[node name="parking_81" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1585918511]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, 60.915718, 0.702, -64.241684)
+
+[node name="parking_82" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=102987352]
+transform = Transform3D(-0.007138299, 0, -0.99997455, 0, 1, 0, 0.99997455, 0, -0.007138299, 60.915718, 0.702, -67.326126)
+
+[node name="parking_83" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1863952669]
+transform = Transform3D(0.48360324, 0, -0.87528735, 0, 1, 0, 0.87528735, 0, 0.48360324, 60.915718, 0.702, -70.2829)
+
+[node name="parking_84" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1110255098]
+transform = Transform3D(0.36066428, 0, 0.9326957, 0, 1, 0, -0.9326957, 0, 0.36066428, 60.12516, 0.702, -73.39017)
+
+[node name="parking_85" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=51864024]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, 60.915718, 0.702, -76.27832)
+
+[node name="parking_86" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1028813007]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, 60.915718, 0.702, -79.27547)
+
+[node name="parking_87" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=477760491]
+transform = Transform3D(-0.03064324, 0, 0.9995304, 0, 1, 0, -0.9995304, 0, -0.03064324, 60.915718, 0.702, -82.259186)
+
+[node name="parking_88" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1884242369]
+transform = Transform3D(0.055664793, 0, -0.99844944, 0, 1, 0, 0.99844944, 0, 0.055664793, 60.915718, 0.702, -85.39084)
+
+[node name="parking_89" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1076476051]
+transform = Transform3D(-0.9985732, 0, -0.053399153, 0, 1, 0, 0.053399153, 0, -0.9985732, 52.24843, 0.702, -84.64992)
+
+[node name="parking_90" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=710291686]
+transform = Transform3D(0.9999973, 0, 0.0023038369, 0, 1, 0, -0.0023038369, 0, 0.9999973, 49.173325, 0.702, -85.04448)
+
+[node name="parking_91" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1845986437]
+transform = Transform3D(-0.9985404, 0, -0.054009102, 0, 1, 0, 0.054009102, 0, -0.9985404, 46.330505, 0.702, -84.34308)
+
+[node name="parking_92" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=832796084]
+transform = Transform3D(-0.99561113, 0, -0.09358706, 0, 1, 0, 0.09358706, 0, -0.99561113, 43.360733, 0.702, -84.574066)
+
+[node name="parking_93" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1213247461]
+transform = Transform3D(0.9991206, 0, -0.04192792, 0, 1, 0, 0.04192792, 0, 0.9991206, 40.27102, 0.702, -84.85211)
+
+[node name="parking_94" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=727096915]
+transform = Transform3D(-0.9999594, 0, 0.009005694, 0, 1, 0, -0.009005694, 0, -0.9999594, 37.222054, 0.702, -84.69536)
+
+[node name="parking_95" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1898042591]
+transform = Transform3D(0.9993884, 0, -0.034969233, 0, 1, 0, 0.034969233, 0, 0.9993884, 34.404366, 0.702, -84.83952)
+
+[node name="parking_96" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=958731057]
+transform = Transform3D(0.9889693, 0, -0.14812006, 0, 1, 0, 0.14812006, 0, 0.9889693, 31.520609, 0.702, -84.5506)
+
+[node name="parking_97" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1039737211]
+transform = Transform3D(0.9816038, 0, 0.1909289, 0, 1, 0, -0.1909289, 0, 0.9816038, 28.168251, 0.702, -84.745224)
+
+[node name="parking_98" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1859570222]
+transform = Transform3D(-0.90421677, 0, 0.42707375, 0, 1, 0, -0.42707375, 0, -0.90421677, 25.108309, 0.702, -84.48396)
+
+[node name="parking_99" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=886784485]
+transform = Transform3D(0.99884504, 0, -0.04804775, 0, 1, 0, 0.04804775, 0, 0.99884504, 22.36559, 0.702, -84.80524)
+
+[node name="parking_100" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=842785947]
+transform = Transform3D(-0.9989761, 0, -0.045241017, 0, 1, 0, 0.045241017, 0, -0.9989761, 19.281605, 0.702, -84.94423)
+
+[node name="parking_101" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=2098411305]
+transform = Transform3D(-0.99973136, 0, 0.023175817, 0, 1, 0, -0.023175817, 0, -0.99973136, 19.385359, 0.702, -75.14905)
+
+[node name="parking_102" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1586224080]
+transform = Transform3D(0.99885, 0, 0.047943324, 0, 1, 0, -0.047943324, 0, 0.99885, 22.23902, 0.702, -75.14905)
+
+[node name="parking_103" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=618526030]
+transform = Transform3D(0.9999904, 0, 0.0043808073, 0, 1, 0, -0.0043808073, 0, 0.9999904, 25.177282, 0.702, -75.14905)
+
+[node name="parking_104" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=358455466]
+transform = Transform3D(-0.94971013, 0, 0.31313053, 0, 1, 0, -0.31313053, 0, -0.94971013, 28.125788, 0.702, -75.14905)
+
+[node name="parking_105" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=174091589]
+transform = Transform3D(-0.9972385, 0, -0.0742652, 0, 1, 0, 0.0742652, 0, -0.9972385, 31.257496, 0.702, -74.82016)
+
+[node name="parking_106" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=1225116583]
+transform = Transform3D(0.99981505, 0, 0.0192324, 0, 1, 0, -0.0192324, 0, 0.99981505, 34.308388, 0.702, -74.93147)
+
+[node name="parking_107" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=798404616]
+transform = Transform3D(-0.9999815, 0, -0.006073773, 0, 1, 0, 0.006073773, 0, -0.9999815, 37.056023, 0.702, -74.92961)
 
 [node name="Ground" type="StaticBody3D" parent="World" unique_id=221849856]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
