@@ -27,6 +27,18 @@ ambient_light_color = Color(0.45, 0.55, 0.65, 1)
 ambient_light_energy = 0.65
 tonemap_mode = 2
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_g4kob"]
+size = Vector3(1, 16.378754, 183.37257)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qy1jj"]
+size = Vector3(182.85677, 14.485413, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xj3m"]
+size = Vector3(1, 19.279785, 183.0617)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mcffj"]
+size = Vector3(183.95203, 21.004822, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 size = Vector3(80, 1, 80)
 
@@ -367,6 +379,25 @@ transform = Transform3D(0.99981505, 0, 0.0192324, 0, 1, 0, -0.0192324, 0, 0.9998
 
 [node name="parking_107" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=798404616]
 transform = Transform3D(-0.9999815, 0, -0.006073773, 0, 1, 0, 0.006073773, 0, -0.9999815, 37.056023, 0.702, -74.92961)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="World/ParkingMap" unique_id=1049998821]
+transform = Transform3D(1, 0, 0, 0, 0.9997091, -0.02411811, 0, 0.02411811, 0.9997091, -60.275925, 0, 0)
+
+[node name="box-prawo" type="CollisionShape3D" parent="World/ParkingMap/StaticBody3D" unique_id=1330738868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4099307, -9.700398)
+shape = SubResource("BoxShape3D_g4kob")
+
+[node name="box -przod" type="CollisionShape3D" parent="World/ParkingMap/StaticBody3D" unique_id=512861053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90.89066, 8.675694, 80.12325)
+shape = SubResource("BoxShape3D_qy1jj")
+
+[node name="box - lewo" type="CollisionShape3D" parent="World/ParkingMap/StaticBody3D" unique_id=160320838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180.57986, 7.0682898, -9.727714)
+shape = SubResource("BoxShape3D_3xj3m")
+
+[node name="box - tyl" type="CollisionShape3D" parent="World/ParkingMap/StaticBody3D" unique_id=377237509]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 89.80655, 7.589417, -100.020004)
+shape = SubResource("BoxShape3D_mcffj")
 
 [node name="Ground" type="StaticBody3D" parent="World" unique_id=221849856]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
