@@ -57,6 +57,16 @@ text = "Status parkowania"
 [node name="LimitValue" type="Label" parent="Margin/VBox/Sections/Limit"]
 text = "Limit: —"
 
+[node name="ParkedAtValue" type="Label" parent="Margin/VBox/Sections/Limit"]
+visible = false
+text = "Zaparkowano: —"
+
+[node name="ViolationHint" type="Label" parent="Margin/VBox"]
+visible = false
+theme_override_colors/font_color = Color(0.35, 0.92, 0.88, 1)
+autowrap_mode = 2
+text = ""
+
 [node name="FineBlocked" type="Label" parent="Margin/VBox"]
 visible = false
 theme_override_colors/font_color = Color(0.95, 0.55, 0.35, 1)
@@ -77,6 +87,13 @@ text = "Ignoruj"
 
 [node name="BtnClose" type="Button" parent="Margin/VBox/Actions"]
 text = "Zamknij"
+
+[node name="CancelFineRow" type="VBoxContainer" parent="Margin/VBox"]
+visible = false
+theme_override_constants/separation = 6
+
+[node name="BtnCancelFine" type="Button" parent="Margin/VBox/CancelFineRow"]
+text = "[X] Anuluj mandat"
 
 [node name="FineSubmenu" type="VBoxContainer" parent="Margin/VBox"]
 visible = false

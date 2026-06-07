@@ -56,6 +56,15 @@ public class SaveManager extends godot.api.Node {
         data.hour = ((Number) config.getValue(SECTION, "hour", 8)).intValue();
         data.minute = ((Number) config.getValue(SECTION, "minute", 0)).intValue();
         data.difficulty = ((Number) config.getValue(SECTION, "difficulty", 1)).intValue();
+        data.carsInspectedToday = ((Number) config.getValue(SECTION, "cars_inspected", 0)).intValue();
+        Object vehiclesPayload = config.getValue(SECTION, "vehicles_payload", "");
+        data.vehiclesPayload = vehiclesPayload == null ? "" : vehiclesPayload.toString();
+        data.persistPlayerTransform = toBool(config.getValue(SECTION, "player_saved", false));
+        data.playerPosX = toFloat(config.getValue(SECTION, "player_x", 0f));
+        data.playerPosY = toFloat(config.getValue(SECTION, "player_y", 2f));
+        data.playerPosZ = toFloat(config.getValue(SECTION, "player_z", 4f));
+        data.playerRotY = toFloat(config.getValue(SECTION, "player_rot_y", 0f));
+        data.playerPitch = toFloat(config.getValue(SECTION, "player_pitch", 0f));
         return data;
     }
 
@@ -76,6 +85,7 @@ public class SaveManager extends godot.api.Node {
             return false;
         }
         data.applyTo(GameState.instance);
+        GameState.instance.markLoadedFromSave(slot);
         GameState.instance.notifyStateChanged();
         return true;
     }
@@ -98,7 +108,32 @@ public class SaveManager extends godot.api.Node {
         config.setValue(SECTION, "hour", data.hour);
         config.setValue(SECTION, "minute", data.minute);
         config.setValue(SECTION, "difficulty", data.difficulty);
+        config.setValue(SECTION, "cars_inspected", data.carsInspectedToday);
+        config.setValue(SECTION, "vehicles_payload", data.vehiclesPayload == null ? "" : data.vehiclesPayload);
+        config.setValue(SECTION, "player_saved", data.persistPlayerTransform);
+        config.setValue(SECTION, "player_x", data.playerPosX);
+        config.setValue(SECTION, "player_y", data.playerPosY);
+        config.setValue(SECTION, "player_z", data.playerPosZ);
+        config.setValue(SECTION, "player_rot_y", data.playerRotY);
+        config.setValue(SECTION, "player_pitch", data.playerPitch);
         config.save(slotPath(slot));
+    }
+
+    private static boolean toBool(Object value) {
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        if (value instanceof Number number) {
+            return number.intValue() != 0;
+        }
+        return false;
+    }
+
+    private static float toFloat(Object value) {
+        if (value instanceof Number number) {
+            return number.floatValue();
+        }
+        return 0f;
     }
 
     private String slotPath(int slot) {

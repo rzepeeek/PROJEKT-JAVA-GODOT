@@ -27,12 +27,20 @@ properties = [
 	actual_spot_type,
 	ticket_type,
 	parking_spot_name,
-	fine_issued
+	fine_issued,
+	parked_at_hour,
+	parked_at_minute,
+	model_file,
+	uses_placeholder_visual,
+	placeholder_color_r,
+	placeholder_color_g,
+	placeholder_color_b
 ]
 functions = [
     get_actual_violation,
 	get_violation_label,
 	get_ticket_type_label,
+	format_parked_at,
 	get_status_summary,
 	refit_collision,
 	_ready,

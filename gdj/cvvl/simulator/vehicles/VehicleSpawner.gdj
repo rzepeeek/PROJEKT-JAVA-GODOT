@@ -21,5 +21,6 @@ properties = [
 functions = [
     _ready,
 	spawn_all_vehicles,
+	capture_spawned_vehicles,
 	get_spawned_vehicles
 ]

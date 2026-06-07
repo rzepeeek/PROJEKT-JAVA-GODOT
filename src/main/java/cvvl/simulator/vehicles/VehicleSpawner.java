@@ -1,5 +1,7 @@
 package cvvl.simulator.vehicles;
 
+import cvvl.simulator.GameState;
+import cvvl.simulator.data.SavedVehicleData;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
 import godot.api.BoxMesh;
@@ -78,25 +80,47 @@ public void spawnAllVehicles() {
 	}
 	hasSpawned = true;
 
-	for (int i = 0; i < SPOT_NAMES.length; i++) {
+	if (GameState.instance != null && GameState.instance.hasPersistedVehicles()) {
+		spawnFromPersisted(GameState.instance.getPersistedVehicles());
+		GameState.instance.clearPersistedVehicles();
+		return;
+	}
 
-		// 75% szans na zajęcie miejsca
+	for (int i = 0; i < SPOT_NAMES.length; i++) {
 		if (rng.randf() > 0.55f) {
 			continue;
 		}
 
 		String spotName = SPOT_NAMES[i];
 		Marker3D marker = findParkingMarker(spotName);
-
 		if (marker != null) {
-			spawnAt(marker, spotName, modelFileForSpotIndex());
+			spawnAt(marker, spotName, modelFileForSpotIndex(), null);
 		}
 	}
 }
 
 	@RegisterFunction
+	public List<SavedVehicleData> captureSpawnedVehicles() {
+		List<SavedVehicleData> snapshots = new ArrayList<>();
+		for (Vehicle vehicle : spawned) {
+			vehicle.syncFineStatusFromGameState();
+			snapshots.add(SavedVehicleData.fromVehicle(vehicle));
+		}
+		return snapshots;
+	}
+
+	@RegisterFunction
 	public List<Vehicle> getSpawnedVehicles() {
 		return spawned;
+	}
+
+	private void spawnFromPersisted(List<SavedVehicleData> snapshots) {
+		for (SavedVehicleData snapshot : snapshots) {
+			Marker3D marker = findParkingMarker(snapshot.parkingSpotName);
+			if (marker != null) {
+				spawnAt(marker, snapshot.parkingSpotName, snapshot.modelFile, snapshot);
+			}
+		}
 	}
 
 	private Marker3D findParkingMarker(String spotName) {
@@ -128,25 +152,52 @@ public void spawnAllVehicles() {
 		return ResourceLoader.exists(fallback) ? fallback : path;
 	}
 
-	private void spawnAt(Marker3D spot, String spotName, String modelFile) {
+	private void spawnAt(Marker3D spot, String spotName, String modelFile, SavedVehicleData snapshot) {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Vehicle_" + spotName);
 
-		vehicle.vehicleId = "V-" + rng.randiRange(1000, 9999);
-		vehicle.plate = randomPlate();
-		vehicle.parkingSpotName = spotName;
-		vehicle.requiredSpotType = randomSpotType();
-		vehicle.actualSpotType = randomSpotType();
-		vehicle.timeLimitMinutes = rng.randiRange(30, 180);
-		vehicle.parkingMinutes = rng.randfRange(5f, 240f);
-		vehicle.ticketType = randomTicketType();
+		if (snapshot != null) {
+			snapshot.applyTo(vehicle);
+			vehicle.parkingSpotName = spotName;
+		} else {
+			vehicle.vehicleId = "V-" + rng.randiRange(1000, 9999);
+			vehicle.plate = randomPlate();
+			vehicle.parkingSpotName = spotName;
+			vehicle.requiredSpotType = randomSpotType();
+			vehicle.actualSpotType = randomSpotType();
+			vehicle.timeLimitMinutes = rng.randiRange(30, 180);
+			vehicle.parkingMinutes = rng.randfRange(5f, 240f);
+			vehicle.ticketType = randomTicketType();
+			assignParkedAt(vehicle);
+		}
+
+		String resolvedModel = snapshot != null && snapshot.placeholder
+				? ""
+				: resolveModelPath(modelFile == null ? "" : modelFile);
+		vehicle.modelFile = modelFile == null ? "" : modelFile;
 
 		VehicleModelHelper.configureVehiclePhysics(vehicle);
 		addCollisionShape(vehicle, PLACEHOLDER_COLLISION_SIZE, groundedCollisionCenter(PLACEHOLDER_COLLISION_SIZE));
 
-		if (!buildVisualFromModel(vehicle, resolveModelPath(modelFile))) {
-			buildPlaceholderVisual(vehicle, randomCarColor());
+		boolean visualReady = false;
+		if (snapshot != null && snapshot.placeholder) {
+			buildPlaceholderVisual(vehicle, snapshotPlaceholderColor(snapshot));
+			vehicle.usesPlaceholderVisual = true;
+			visualReady = true;
+		} else if (!resolvedModel.isEmpty() && buildVisualFromModel(vehicle, resolvedModel)) {
+			vehicle.usesPlaceholderVisual = false;
+			visualReady = true;
 		}
+
+		if (!visualReady) {
+			Color color = randomCarColor();
+			buildPlaceholderVisual(vehicle, color);
+			vehicle.usesPlaceholderVisual = true;
+			vehicle.placeholderColorR = (float) color.getR();
+			vehicle.placeholderColorG = (float) color.getG();
+			vehicle.placeholderColorB = (float) color.getB();
+		}
+
 		vehicle.syncFineStatusFromGameState();
 
 		// Ten sam rodzic co markery — kopia lokalnego transformu parking_XX
@@ -188,6 +239,27 @@ public void spawnAllVehicles() {
 		material.setRoughness(0.45f);
 		body.setMaterialOverride(material);
 		vehicle.addChild(body);
+		vehicle.usesPlaceholderVisual = true;
+		vehicle.placeholderColorR = (float) color.getR();
+		vehicle.placeholderColorG = (float) color.getG();
+		vehicle.placeholderColorB = (float) color.getB();
+	}
+
+	private static Color snapshotPlaceholderColor(SavedVehicleData snapshot) {
+		return new Color(snapshot.placeholderR, snapshot.placeholderG, snapshot.placeholderB, 1f);
+	}
+
+	private static void assignParkedAt(Vehicle vehicle) {
+		if (GameState.instance == null) {
+			return;
+		}
+		int now = GameState.instance.hour * 60 + GameState.instance.minute;
+		int parked = now - (int) vehicle.parkingMinutes;
+		while (parked < 0) {
+			parked += 24 * 60;
+		}
+		vehicle.parkedAtHour = (parked / 60) % 24;
+		vehicle.parkedAtMinute = parked % 60;
 	}
 
 	private static Vector3 groundedCollisionCenter(Vector3 size) {

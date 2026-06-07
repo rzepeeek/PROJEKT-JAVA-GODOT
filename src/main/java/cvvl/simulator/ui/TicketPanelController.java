@@ -2,6 +2,7 @@ package cvvl.simulator.ui;
 
 import cvvl.simulator.GameState;
 import cvvl.simulator.player.PlayerInteraction;
+import cvvl.simulator.systems.DifficultyLevel;
 import cvvl.simulator.vehicles.ParkingViolation;
 import cvvl.simulator.vehicles.Vehicle;
 import godot.annotation.RegisterClass;
@@ -20,11 +21,15 @@ public class TicketPanelController extends PanelContainer {
 	private Label plateLabel;
 	private Label statusLabel;
 	private Label limitLabel;
+	private Label violationHintLabel;
+	private Label parkedAtLabel;
 	private Control fineSubmenu;
 	private Control actionsRow;
+	private Control cancelFineRow;
 	private Label fineBlockedLabel;
 	private Vehicle activeVehicle;
 	private PlayerInteraction playerInteraction;
+	private boolean awaitingCancel;
 
 	@RegisterFunction
 	@Override
@@ -35,8 +40,11 @@ public class TicketPanelController extends PanelContainer {
 		plateLabel = (Label) getNode("Margin/VBox/Sections/Status/Value");
 		statusLabel = (Label) getNode("Margin/VBox/Sections/Limit/StatusValue");
 		limitLabel = (Label) getNode("Margin/VBox/Sections/Limit/LimitValue");
+		violationHintLabel = (Label) getNodeOrNull("Margin/VBox/ViolationHint");
+		parkedAtLabel = (Label) getNodeOrNull("Margin/VBox/Sections/Limit/ParkedAtValue");
 		fineSubmenu = (Control) getNode("Margin/VBox/FineSubmenu");
 		actionsRow = (Control) getNode("Margin/VBox/Actions");
+		cancelFineRow = (Control) getNodeOrNull("Margin/VBox/CancelFineRow");
 		fineBlockedLabel = (Label) getNodeOrNull("Margin/VBox/FineBlocked");
 
 		connectBtn("Margin/VBox/Actions/BtnFine", "onFineClicked");
@@ -46,10 +54,16 @@ public class TicketPanelController extends PanelContainer {
 		connectBtn("Margin/VBox/FineSubmenu/BtnNoTicket", "onFineNoTicket");
 		connectBtn("Margin/VBox/FineSubmenu/BtnExpired", "onFineExpired");
 		connectBtn("Margin/VBox/FineSubmenu/BtnWrongSpot", "onFineWrongSpot");
+		if (getNodeOrNull("Margin/VBox/CancelFineRow/BtnCancelFine") != null) {
+			connectBtn("Margin/VBox/CancelFineRow/BtnCancelFine", "onCancelFineClicked");
+		}
 
 		setModulate(new godot.core.Color(1, 1, 1, 1));
 		if (fineBlockedLabel != null) {
 			fineBlockedLabel.setVisible(false);
+		}
+		if (cancelFineRow != null) {
+			cancelFineRow.setVisible(false);
 		}
 		hidePanel();
 		resolvePlayerInteraction();
@@ -58,6 +72,18 @@ public class TicketPanelController extends PanelContainer {
 	@RegisterFunction
 	@Override
 	public void _process(double delta) {
+		if (awaitingCancel && GameState.instance != null) {
+			updateCancelFineRow();
+			if (!GameState.instance.canCancelFine()) {
+				awaitingCancel = false;
+				if (cancelFineRow != null) {
+					cancelFineRow.setVisible(false);
+				}
+				hidePanel();
+			}
+			return;
+		}
+
 		if (!isVisible() || activeVehicle == null) {
 			return;
 		}
@@ -70,15 +96,39 @@ public class TicketPanelController extends PanelContainer {
 	}
 
 	@RegisterFunction
+	@Override
+	public void _unhandledInput(godot.api.InputEvent event) {
+		if (!isVisible() || !event.isActionPressed("cancel_fine")) {
+			return;
+		}
+		if (tryCancelFine()) {
+			DispatchUi.markInputHandled(this);
+		}
+	}
+
+	@RegisterFunction
 	public void openForVehicle(Vehicle vehicle) {
 		if (vehicle == null) {
 			return;
 		}
+		awaitingCancel = false;
+		if (cancelFineRow != null) {
+			cancelFineRow.setVisible(false);
+		}
+
 		activeVehicle = vehicle;
+		DifficultyLevel level = currentDifficulty();
+
 		vehicleIdLabel.setText(vehicle.vehicleId);
 		plateLabel.setText(vehicle.plate);
-		statusLabel.setText(vehicle.getStatusSummary());
-		limitLabel.setText(String.format("%.0f / %.0f min", vehicle.parkingMinutes, vehicle.timeLimitMinutes));
+		if (level == DifficultyLevel.HARD) {
+			statusLabel.setText("Miejsce: " + vehicle.parkingSpotName);
+		} else {
+			statusLabel.setText(vehicle.getStatusSummary());
+		}
+		updateParkingInfo(vehicle, level);
+		updateViolationHint(vehicle, level);
+
 		if (fineSubmenu != null) {
 			fineSubmenu.setVisible(false);
 		}
@@ -89,6 +139,7 @@ public class TicketPanelController extends PanelContainer {
 
 		if (GameState.instance != null) {
 			GameState.instance.setCurrentVehiclePlate(vehicle.plate);
+			GameState.instance.incrementCarsInspected();
 		}
 	}
 
@@ -100,6 +151,10 @@ public class TicketPanelController extends PanelContainer {
 		if (fineSubmenu != null) {
 			fineSubmenu.setVisible(false);
 		}
+		if (cancelFineRow != null) {
+			cancelFineRow.setVisible(false);
+		}
+		awaitingCancel = false;
 		activeVehicle = null;
 		if (GameState.instance != null) {
 			GameState.instance.setCurrentVehiclePlate("—");
@@ -109,10 +164,15 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onFineClicked() {
-		if (activeVehicle == null) {
+		if (activeVehicle == null || isAlreadyFined(activeVehicle)) {
 			return;
 		}
-		if (isAlreadyFined(activeVehicle)) {
+		DifficultyLevel level = currentDifficulty();
+		if (level == DifficultyLevel.EASY) {
+			ParkingViolation actual = activeVehicle.getActualViolation();
+			if (actual != ParkingViolation.VALID) {
+				applyFine(actual);
+			}
 			return;
 		}
 		if (fineSubmenu != null) {
@@ -122,25 +182,20 @@ public class TicketPanelController extends PanelContainer {
 
 	@RegisterFunction
 	public void onWarningClicked() {
-		if (activeVehicle == null) {
+		if (activeVehicle == null || isAlreadyFined(activeVehicle)) {
 			return;
 		}
-		if (isAlreadyFined(activeVehicle)) {
-			return;
-		}
-		resolveAction(false, 5, -2);
+		DifficultyLevel level = currentDifficulty();
+		resolveAction(false, 5, level.warningReputation());
 		hidePanel();
 	}
 
 	@RegisterFunction
 	public void onIgnoreClicked() {
-		if (activeVehicle == null) {
+		if (activeVehicle == null || isAlreadyFined(activeVehicle)) {
 			return;
 		}
-		if (isAlreadyFined(activeVehicle)) {
-			return;
-		}
-		if (activeVehicle != null && activeVehicle.getActualViolation() != ParkingViolation.VALID) {
+		if (activeVehicle.getActualViolation() != ParkingViolation.VALID) {
 			resolveAction(false, 0, -5);
 		} else {
 			resolveAction(true, 0, 2);
@@ -151,6 +206,16 @@ public class TicketPanelController extends PanelContainer {
 	@RegisterFunction
 	public void onCloseClicked() {
 		hidePanel();
+	}
+
+	@RegisterFunction
+	public void onCancelFineClicked() {
+		tryCancelFine();
+	}
+
+	@RegisterFunction
+	public boolean cancelLastFineFromInput() {
+		return tryCancelFine();
 	}
 
 	@RegisterFunction
@@ -168,25 +233,130 @@ public class TicketPanelController extends PanelContainer {
 		applyFine(ParkingViolation.WRONG_SPOT);
 	}
 
+	private boolean tryCancelFine() {
+		if (GameState.instance == null || !GameState.instance.canCancelFine()) {
+			return false;
+		}
+		String plate = GameState.instance.pendingCancelPlate;
+		if (!GameState.instance.cancelLastFine()) {
+			return false;
+		}
+		if (activeVehicle != null && activeVehicle.plate.equals(plate)) {
+			activeVehicle.fineIssued = false;
+		}
+		awaitingCancel = false;
+		if (cancelFineRow != null) {
+			cancelFineRow.setVisible(false);
+		}
+		hidePanel();
+		return true;
+	}
+
 	private void applyFine(ParkingViolation chosen) {
-		if (activeVehicle == null) {
+		if (activeVehicle == null || isAlreadyFined(activeVehicle)) {
 			return;
 		}
-		if (isAlreadyFined(activeVehicle)) {
-			return;
-		}
+		DifficultyLevel level = currentDifficulty();
 		ParkingViolation actual = activeVehicle.getActualViolation();
 		boolean correct = actual == chosen && chosen != ParkingViolation.VALID;
 
+		int moneyDelta;
+		int reputationDelta;
+		boolean ticketIncrement = false;
 		if (correct) {
-			resolveAction(true, 25, 8);
+			moneyDelta = 25;
+			reputationDelta = 8;
+			ticketIncrement = true;
 		} else if (actual == ParkingViolation.VALID) {
-			resolveAction(false, -15, -10);
+			moneyDelta = -15;
+			reputationDelta = level.wrongFineReputation();
 		} else {
-			resolveAction(false, -10, -6);
+			moneyDelta = -10;
+			reputationDelta = level.wrongFineReputation();
 		}
+
+		resolveAction(correct, moneyDelta, reputationDelta, ticketIncrement);
 		markVehicleAsFined(activeVehicle);
-		hidePanel();
+
+		if (level.allowsFineCancel()) {
+			GameState.instance.beginFineCancelWindow(
+					activeVehicle.plate,
+					moneyDelta,
+					reputationDelta,
+					ticketIncrement
+			);
+			awaitingCancel = true;
+			if (actionsRow != null) {
+				actionsRow.setVisible(false);
+			}
+			if (fineSubmenu != null) {
+				fineSubmenu.setVisible(false);
+			}
+			if (cancelFineRow != null) {
+				cancelFineRow.setVisible(true);
+			}
+			updateCancelFineRow();
+		} else {
+			hidePanel();
+		}
+	}
+
+	private void updateCancelFineRow() {
+		if (cancelFineRow == null || GameState.instance == null) {
+			return;
+		}
+		Button btn = (Button) getNodeOrNull("Margin/VBox/CancelFineRow/BtnCancelFine");
+		if (btn != null) {
+			float seconds = GameState.instance.pendingCancelSecondsLeft();
+			btn.setText(String.format("[X] Anuluj mandat (%.0fs)", seconds));
+		}
+	}
+
+	private void updateParkingInfo(Vehicle vehicle, DifficultyLevel level) {
+		if (parkedAtLabel != null) {
+			parkedAtLabel.setVisible(level.showsParkedAtAndLimit());
+			if (level.showsParkedAtAndLimit()) {
+				parkedAtLabel.setText("Zaparkowano: " + vehicle.formatParkedAt());
+			}
+		}
+
+		if (level.hidesParkingDuration()) {
+			limitLabel.setText("Limit biletu: " + (int) vehicle.timeLimitMinutes + " min");
+			return;
+		}
+		if (level.showsExactParkingMinutes()) {
+			limitLabel.setText(String.format(
+					"Postój: %.1f min (limit %.0f min)",
+					vehicle.parkingMinutes,
+					vehicle.timeLimitMinutes
+			));
+			return;
+		}
+		limitLabel.setText(String.format("%.0f / %.0f min", vehicle.parkingMinutes, vehicle.timeLimitMinutes));
+	}
+
+	private void updateViolationHint(Vehicle vehicle, DifficultyLevel level) {
+		if (violationHintLabel == null) {
+			return;
+		}
+		if (level.revealsViolationOnScan()) {
+			ParkingViolation actual = vehicle.getActualViolation();
+			if (actual == ParkingViolation.VALID) {
+				violationHintLabel.setText("Skan: brak naruszenia — parkowanie prawidłowe");
+			} else {
+				violationHintLabel.setText("Skan: wykryte naruszenie — " + vehicle.getViolationLabel());
+			}
+			violationHintLabel.setVisible(true);
+		} else {
+			violationHintLabel.setVisible(false);
+		}
+	}
+
+	private DifficultyLevel currentDifficulty() {
+		if (GameState.instance == null) {
+			return DifficultyLevel.NORMAL;
+		}
+		return GameState.instance.getDifficultyLevel();
 	}
 
 	private boolean isAlreadyFined(Vehicle vehicle) {
@@ -223,6 +393,11 @@ public class TicketPanelController extends PanelContainer {
 			fineSubmenu.setVisible(false);
 		}
 		setFineButtonsEnabled(!blocked);
+		Button fineBtn = (Button) getNodeOrNull("Margin/VBox/Actions/BtnFine");
+		if (fineBtn != null && !blocked && currentDifficulty() == DifficultyLevel.EASY
+				&& vehicle.getActualViolation() == ParkingViolation.VALID) {
+			fineBtn.setDisabled(true);
+		}
 	}
 
 	private void setFineButtonsEnabled(boolean enabled) {
@@ -243,10 +418,14 @@ public class TicketPanelController extends PanelContainer {
 	}
 
 	private void resolveAction(boolean success, int moneyDelta, int reputationDelta) {
+		resolveAction(success, moneyDelta, reputationDelta, success);
+	}
+
+	private void resolveAction(boolean success, int moneyDelta, int reputationDelta, boolean incrementTickets) {
 		if (GameState.instance == null) {
 			return;
 		}
-		if (success) {
+		if (incrementTickets) {
 			GameState.instance.incrementTickets();
 		}
 		GameState.instance.addMoney(moneyDelta);

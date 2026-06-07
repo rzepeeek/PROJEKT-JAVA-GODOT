@@ -24,12 +24,15 @@ properties = [
 functions = [
     _ready,
 	_process,
+	_unhandled_input,
 	open_for_vehicle,
 	hide_panel,
 	on_fine_clicked,
 	on_warning_clicked,
 	on_ignore_clicked,
 	on_close_clicked,
+	on_cancel_fine_clicked,
+	cancel_last_fine_from_input,
 	on_fine_no_ticket,
 	on_fine_expired,
 	on_fine_wrong_spot

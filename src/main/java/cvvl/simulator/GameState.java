@@ -4,11 +4,15 @@ import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
 import godot.annotation.RegisterProperty;
 import godot.annotation.RegisterSignal;
+import cvvl.simulator.data.SavedVehicleData;
+import cvvl.simulator.systems.DifficultyLevel;
 import godot.api.Node;
 import godot.core.Signal0;
 import godot.core.StringNames;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RegisterClass
@@ -49,6 +53,30 @@ public class GameState extends Node {
 	public int difficulty = 1;
 
 	@RegisterProperty
+	public int carsInspectedToday = 0;
+
+	@RegisterProperty
+	public boolean difficultyLocked = false;
+
+	@RegisterProperty
+	public int activeSaveSlot = -1;
+
+	@RegisterProperty
+	public String pendingCancelPlate = "";
+
+	@RegisterProperty
+	public int pendingCancelMoneyDelta = 0;
+
+	@RegisterProperty
+	public int pendingCancelReputationDelta = 0;
+
+	@RegisterProperty
+	public boolean pendingCancelTicketIncrement = false;
+
+	@RegisterProperty
+	public long pendingCancelDeadlineMs = 0L;
+
+	@RegisterProperty
 	public String currentVehiclePlate = "—";
 
 	@RegisterProperty
@@ -83,6 +111,7 @@ public class GameState extends Node {
 	public float playerPitch = 0f;
 
 	private final Set<String> finedVehiclePlates = new HashSet<>();
+	private final List<SavedVehicleData> persistedVehicles = new ArrayList<>();
 
 	@RegisterFunction
 	public void prepareReturnTo(String scenePath, boolean reopenPause) {
@@ -99,6 +128,7 @@ public class GameState extends Node {
 
 	@RegisterFunction
 	public void advanceTime(float deltaMinutes) {
+		int previousDay = day;
 		minute += (int) deltaMinutes;
 		while (minute >= 60) {
 			minute -= 60;
@@ -108,7 +138,176 @@ public class GameState extends Node {
 			hour = 0;
 			day++;
 		}
+		if (day > previousDay) {
+			onNewDay();
+		}
 		notifyStateChanged();
+	}
+
+	public DifficultyLevel getDifficultyLevel() {
+		return DifficultyLevel.fromId(difficulty);
+	}
+
+	@RegisterFunction
+	public String formatDifficulty() {
+		return getDifficultyLevel().getLabel();
+	}
+
+	@RegisterFunction
+	public float getGameTimeTickSeconds() {
+		return getDifficultyLevel().gameTimeTickSeconds();
+	}
+
+	@RegisterFunction
+	public int getMinutesPerTick() {
+		return getDifficultyLevel().minutesPerTick();
+	}
+
+	@RegisterFunction
+	public void resetNewGame(int difficultyLevel) {
+		money = 500;
+		reputation = 50;
+		ticketsIssued = 0;
+		day = 1;
+		hour = 8;
+		minute = 0;
+		difficulty = difficultyLevel;
+		carsInspectedToday = 0;
+		difficultyLocked = false;
+		activeSaveSlot = -1;
+		currentVehiclePlate = "—";
+		reopenPauseAfterReturn = false;
+		returnScenePath = ScenePaths.MAIN_MENU;
+		clearFinedVehicles();
+		clearPersistedVehicles();
+		clearPlayerTransform();
+		clearPendingFineCancel();
+		notifyStateChanged();
+	}
+
+	public void captureVehicleSnapshots(List<SavedVehicleData> snapshots) {
+		persistedVehicles.clear();
+		if (snapshots != null) {
+			persistedVehicles.addAll(snapshots);
+		}
+	}
+
+	public List<SavedVehicleData> getPersistedVehicles() {
+		return new ArrayList<>(persistedVehicles);
+	}
+
+	public boolean hasPersistedVehicles() {
+		return !persistedVehicles.isEmpty();
+	}
+
+	public void clearPersistedVehicles() {
+		persistedVehicles.clear();
+	}
+
+	public void setPersistedVehicles(List<SavedVehicleData> snapshots) {
+		persistedVehicles.clear();
+		if (snapshots != null) {
+			persistedVehicles.addAll(snapshots);
+		}
+	}
+
+	public void restoreFinedPlatesFromVehicles(List<SavedVehicleData> vehicles) {
+		clearFinedVehicles();
+		if (vehicles == null) {
+			return;
+		}
+		for (SavedVehicleData vehicle : vehicles) {
+			if (vehicle.fineIssued) {
+				markVehicleFined(vehicle.plate);
+			}
+		}
+	}
+
+	@RegisterFunction
+	public void markLoadedFromSave(int slot) {
+		difficultyLocked = true;
+		activeSaveSlot = slot;
+	}
+
+	@RegisterFunction
+	public void markSavedToSlot(int slot) {
+		activeSaveSlot = slot;
+		difficultyLocked = true;
+	}
+
+	@RegisterFunction
+	public void incrementCarsInspected() {
+		carsInspectedToday++;
+		notifyStateChanged();
+	}
+
+	@RegisterFunction
+	public String formatDailyGoal() {
+		DifficultyLevel level = getDifficultyLevel();
+		if (!level.showsDailyGoal()) {
+			return "";
+		}
+		int goal = level.dailyInspectGoal();
+		return String.format("CEL: Sprawdź %d aut (%d/%d)", goal, carsInspectedToday, goal);
+	}
+
+	@RegisterFunction
+	public boolean canCancelFine() {
+		if (!getDifficultyLevel().allowsFineCancel()) {
+			return false;
+		}
+		return !pendingCancelPlate.isEmpty() && System.currentTimeMillis() < pendingCancelDeadlineMs;
+	}
+
+	@RegisterFunction
+	public float pendingCancelSecondsLeft() {
+		if (!canCancelFine()) {
+			return 0f;
+		}
+		return Math.max(0f, (pendingCancelDeadlineMs - System.currentTimeMillis()) / 1000f);
+	}
+
+	@RegisterFunction
+	public void beginFineCancelWindow(String plate, int moneyDelta, int reputationDelta, boolean ticketIncrement) {
+		if (!getDifficultyLevel().allowsFineCancel()) {
+			return;
+		}
+		pendingCancelPlate = plate == null ? "" : plate.trim();
+		pendingCancelMoneyDelta = moneyDelta;
+		pendingCancelReputationDelta = reputationDelta;
+		pendingCancelTicketIncrement = ticketIncrement;
+		long windowMs = (long) (getDifficultyLevel().fineCancelSeconds() * 1000f);
+		pendingCancelDeadlineMs = System.currentTimeMillis() + windowMs;
+		notifyStateChanged();
+	}
+
+	@RegisterFunction
+	public boolean cancelLastFine() {
+		if (!canCancelFine()) {
+			return false;
+		}
+		addMoney(-pendingCancelMoneyDelta);
+		changeReputation(-pendingCancelReputationDelta);
+		if (pendingCancelTicketIncrement && ticketsIssued > 0) {
+			ticketsIssued--;
+		}
+		unmarkVehicleFined(pendingCancelPlate);
+		clearPendingFineCancel();
+		notifyStateChanged();
+		return true;
+	}
+
+	@RegisterFunction
+	public void clearPendingFineCancel() {
+		pendingCancelPlate = "";
+		pendingCancelMoneyDelta = 0;
+		pendingCancelReputationDelta = 0;
+		pendingCancelTicketIncrement = false;
+		pendingCancelDeadlineMs = 0L;
+	}
+
+	private void onNewDay() {
+		carsInspectedToday = 0;
 	}
 
 	@RegisterFunction
@@ -177,6 +376,11 @@ public class GameState extends Node {
 		if (!key.isEmpty()) {
 			finedVehiclePlates.add(key);
 		}
+	}
+
+	@RegisterFunction
+	public void unmarkVehicleFined(String plate) {
+		finedVehiclePlates.remove(normalizePlate(plate));
 	}
 
 	private static String normalizePlate(String plate) {

@@ -70,8 +70,8 @@ public class SaveMenuController extends Control {
             return;
         }
         if (event.isActionPressed("pause") || event.isActionPressed("ui_cancel")) {
+            DispatchUi.markInputHandled(this);
             goBack();
-            getViewport().setInputAsHandled();
         }
     }
 
@@ -112,15 +112,36 @@ public class SaveMenuController extends Control {
             return;
         }
         boolean saveMode = GameState.instance != null && "save".equals(GameState.instance.saveMenuMode);
+        SaveSlotData data = SaveManager.instance.loadSlotData(slot);
 
         if (saveMode) {
+            GameWorldController gameWorld = findGameWorldController();
+            if (gameWorld != null) {
+                gameWorld.captureWorldForSave();
+            }
+            if (!data.empty && GameState.instance != null
+                    && !data.matchesDifficulty(GameState.instance.difficulty)) {
+                statusLabel.setText(String.format(
+                        "Slot %d jest zapisany na poziomie %s. Bieżąca gra: %s — nie można nadpisać.",
+                        slot + 1,
+                        data.formatDifficultyLabel(),
+                        GameState.instance.formatDifficulty()
+                ));
+                return;
+            }
             SaveManager.instance.saveToSlot(slot);
-            statusLabel.setText("Zapisano w slocie " + (slot + 1) + ".");
+            if (GameState.instance != null) {
+                GameState.instance.markSavedToSlot(slot);
+            }
+            statusLabel.setText(String.format(
+                    "Zapisano w slocie %d (poziom: %s).",
+                    slot + 1,
+                    GameState.instance != null ? GameState.instance.formatDifficulty() : "—"
+            ));
             refreshSlots();
             return;
         }
 
-        SaveSlotData data = SaveManager.instance.loadSlotData(slot);
         if (data.empty) {
             statusLabel.setText("Slot " + (slot + 1) + " jest pusty.");
             return;
@@ -130,6 +151,7 @@ public class SaveMenuController extends Control {
             if (GameState.instance != null) {
                 GameState.instance.reopenPauseAfterReturn = false;
             }
+            statusLabel.setText("Wczytano zapis — poziom: " + data.formatDifficultyLabel() + ".");
             getTree().changeSceneToFile(ScenePaths.GAME);
         }
     }
@@ -144,16 +166,28 @@ public class SaveMenuController extends Control {
             slotSummaryLabels[i].setText(data.formatSummary());
             slotDateLabels[i].setText("Ostatni zapis: " + data.formatSavedAt());
             Button btn = (Button) getNode("Panel/VBox/Slots/Slot" + i + "/ActionBtn");
-            btn.setText(saveMode ? "Zapisz (nadpisz)" : (data.empty ? "Wczytaj" : "Wczytaj"));
+            boolean difficultyBlocked = saveMode && !data.empty && GameState.instance != null
+                    && !data.matchesDifficulty(GameState.instance.difficulty);
+            if (saveMode) {
+                btn.setText(difficultyBlocked ? "Inny poziom" : "Zapisz (nadpisz)");
+            } else {
+                btn.setText(data.empty ? "Pusty slot" : "Wczytaj");
+            }
+            btn.setDisabled(saveMode && difficultyBlocked);
         }
     }
 
     private void updateTitle() {
         boolean saveMode = GameState.instance != null && "save".equals(GameState.instance.saveMenuMode);
         titleLabel.setText(saveMode ? "ZAPISZ GRĘ" : "WCZYTAJ GRĘ");
-        statusLabel.setText(saveMode
-                ? "Wybierz slot — istniejący zapis zostanie nadpisany."
-                : "Wybierz slot do wczytania.");
+        if (saveMode && GameState.instance != null) {
+            statusLabel.setText(String.format(
+                    "Bieżący poziom: %s. Możesz nadpisać tylko slot z tym samym poziomem trudności.",
+                    GameState.instance.formatDifficulty()
+            ));
+        } else {
+            statusLabel.setText("Wybierz slot do wczytania. Poziom trudności zostanie przywrócony z zapisu.");
+        }
     }
 
     private godot.core.StringName actionMethodName(int slot) {

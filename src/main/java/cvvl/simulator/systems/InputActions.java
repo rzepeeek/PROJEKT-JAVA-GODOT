@@ -9,15 +9,17 @@ public final class InputActions {
     public static final String PAUSE = "pause";
     public static final String SPRINT = "sprint";
     public static final String JUMP = "jump";
+    public static final String CANCEL_FINE = "cancel_fine";
 
     public static final String[] BINDABLE = {
             MOVE_FORWARD, MOVE_BACK, MOVE_LEFT, MOVE_RIGHT,
-            INTERACT, PAUSE, SPRINT, JUMP
+            INTERACT, PAUSE, SPRINT, JUMP, CANCEL_FINE
     };
 
     public static final String[] BIND_LABELS = {
             "Ruch do przodu", "Ruch do tyłu", "Ruch w lewo", "Ruch w prawo",
-            "Interakcja (pojazd)", "Menu / pauza", "Sprint", "Skok"
+            "Interakcja (pojazd)", "Menu / pauza", "Sprint", "Skok",
+            "Anuluj mandat (X)"
     };
 
     private InputActions() {}

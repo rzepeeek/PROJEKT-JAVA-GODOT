@@ -4,14 +4,26 @@ import cvvl.simulator.DispatchColors;
 import godot.api.Button;
 import godot.api.Control;
 import godot.api.Label;
+import godot.api.Node;
 import godot.api.PanelContainer;
 import godot.api.StyleBoxFlat;
 import godot.api.Tween;
+import godot.api.Viewport;
 import godot.core.Color;
 import godot.core.Vector2;
 
 public final class DispatchUi {
     private DispatchUi() {}
+
+    public static void markInputHandled(Node node) {
+        if (node == null) {
+            return;
+        }
+        Viewport viewport = node.getViewport();
+        if (viewport != null) {
+            viewport.setInputAsHandled();
+        }
+    }
 
     public static StyleBoxFlat panelBox(float cornerRadius) {
         StyleBoxFlat box = new StyleBoxFlat();

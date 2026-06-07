@@ -24,8 +24,8 @@ public class SubmenuController extends Control {
     @Override
     public void _unhandledInput(godot.api.InputEvent event) {
         if (event.isActionPressed("pause") || event.isActionPressed("ui_cancel")) {
+            DispatchUi.markInputHandled(this);
             goBack();
-            getViewport().setInputAsHandled();
         }
     }
 

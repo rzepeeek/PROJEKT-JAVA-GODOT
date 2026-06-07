@@ -44,8 +44,8 @@ public class PauseMenuController extends Control {
 			return;
 		}
 		if (event.isActionPressed("pause") || event.isActionPressed("ui_cancel")) {
+			DispatchUi.markInputHandled(this);
 			onResume();
-			getViewport().setInputAsHandled();
 		}
 	}
 

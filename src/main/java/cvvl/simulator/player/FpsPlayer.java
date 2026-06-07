@@ -1,6 +1,7 @@
 package cvvl.simulator.player;
 
 import cvvl.simulator.systems.SettingsManager;
+import cvvl.simulator.ui.DispatchUi;
 import cvvl.simulator.vehicles.VehicleModelHelper;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
@@ -138,7 +139,7 @@ public class FpsPlayer extends CharacterBody3D {
 		Node interactionNode = getNode("Interaction");
 		if (interactionNode instanceof PlayerInteraction interaction
 				&& interaction.handleInspectInput(event)) {
-			getViewport().setInputAsHandled();
+			DispatchUi.markInputHandled(this);
 		}
 	}
 

@@ -30,13 +30,7 @@ public class MainMenuController extends Control {
 
 	@RegisterFunction
 	public void onStart() {
-		if (GameState.instance != null) {
-			GameState.instance.reopenPauseAfterReturn = false;
-			GameState.instance.clearPlayerTransform();
-			GameState.instance.clearFinedVehicles();
-			GameState.instance.returnScenePath = ScenePaths.MAIN_MENU;
-		}
-		changeScene(ScenePaths.GAME);
+		openSubmenu(ScenePaths.DIFFICULTY);
 	}
 
 	@RegisterFunction

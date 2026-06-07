@@ -35,6 +35,27 @@ public class Vehicle extends StaticBody3D {
 	@RegisterProperty
 	public boolean fineIssued = false;
 
+	@RegisterProperty
+	public int parkedAtHour = 8;
+
+	@RegisterProperty
+	public int parkedAtMinute = 0;
+
+	@RegisterProperty
+	public String modelFile = "";
+
+	@RegisterProperty
+	public boolean usesPlaceholderVisual = false;
+
+	@RegisterProperty
+	public float placeholderColorR = 0.5f;
+
+	@RegisterProperty
+	public float placeholderColorG = 0.5f;
+
+	@RegisterProperty
+	public float placeholderColorB = 0.5f;
+
 	@RegisterFunction
 	public ParkingViolation getActualViolation() {
 		if (ticketType == TicketType.NONE || ticketType == TicketType.NO_TICKET) {
@@ -68,6 +89,11 @@ public class Vehicle extends StaticBody3D {
 			case WRONG_SPOT -> "Niewłaściwy";
 			case NO_TICKET -> "Brak biletu";
 		};
+	}
+
+	@RegisterFunction
+	public String formatParkedAt() {
+		return String.format("%02d:%02d", parkedAtHour, parkedAtMinute);
 	}
 
 	@RegisterFunction

@@ -3,6 +3,7 @@ package cvvl.simulator;
 import cvvl.simulator.player.FpsPlayer;
 import cvvl.simulator.systems.SettingsManager;
 import cvvl.simulator.player.PlayerInteraction;
+import cvvl.simulator.ui.DispatchUi;
 import cvvl.simulator.ui.OptionsMenuController;
 import cvvl.simulator.ui.PauseMenuController;
 import cvvl.simulator.ui.SaveMenuController;
@@ -42,8 +43,6 @@ public class GameWorldController extends Node {
 		setOverlayActive(saveOverlay, false);
 		pauseMenu.setup(this);
 
-		restorePlayerTransform();
-
 		interaction.vehicleTargeted.connect(
 				new MethodCallable1<Void, Vehicle>(this, StringNames.toGodotName("onVehicleTargeted"), new Object[0]),
 				Object.ConnectFlags.DEFAULT
@@ -65,6 +64,13 @@ public class GameWorldController extends Node {
 	@RegisterFunction
 	@Override
 	public void _unhandledInput(godot.api.InputEvent event) {
+		if (event.isActionPressed("cancel_fine")
+				&& GameState.instance != null
+				&& GameState.instance.canCancelFine()) {
+			ticketPanel.cancelLastFineFromInput();
+			DispatchUi.markInputHandled(this);
+			return;
+		}
 		if (!event.isActionPressed("pause")) {
 			return;
 		}
@@ -72,12 +78,12 @@ public class GameWorldController extends Node {
 			return;
 		}
 		if (ticketPanel.isVisible()) {
+			DispatchUi.markInputHandled(this);
 			ticketPanel.hidePanel();
-			getViewport().setInputAsHandled();
 			return;
 		}
+		DispatchUi.markInputHandled(this);
 		togglePause();
-		getViewport().setInputAsHandled();
 	}
 
 	@RegisterFunction
@@ -153,6 +159,16 @@ public class GameWorldController extends Node {
 	}
 
 	@RegisterFunction
+	public void captureWorldForSave() {
+		capturePlayerTransform();
+		Node spawnerNode = getNodeOrNull("World/ParkingMap/VehicleSpawner");
+		if (spawnerNode instanceof cvvl.simulator.vehicles.VehicleSpawner spawner
+				&& GameState.instance != null) {
+			GameState.instance.captureVehicleSnapshots(spawner.captureSpawnedVehicles());
+		}
+	}
+
+	@RegisterFunction
 	public void capturePlayerTransform() {
 		if (GameState.instance == null || player == null) {
 			return;
@@ -187,6 +203,7 @@ public class GameWorldController extends Node {
 
 	@RegisterFunction
 	public void finishPlayerSpawn() {
+		restorePlayerTransform();
 		if (player != null) {
 			player.snapToGround();
 		}

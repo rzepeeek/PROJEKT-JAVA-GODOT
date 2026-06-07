@@ -123,16 +123,16 @@ public class OptionsMenuController extends Control {
         }
         if (waitingAction == null) {
             if (event.isActionPressed("pause") || event.isActionPressed("ui_cancel")) {
+                DispatchUi.markInputHandled(this);
                 saveAndGoBack();
-                getViewport().setInputAsHandled();
             }
             return;
         }
 
         if (event instanceof InputEventKey keyEvent && keyEvent.isPressed() && !keyEvent.isEcho()) {
             if (keyEvent.getKeycode() == Key.ESCAPE) {
+                DispatchUi.markInputHandled(this);
                 cancelRebind();
-                getViewport().setInputAsHandled();
                 return;
             }
             int code = (int) keyEvent.getPhysicalKeycode().getValue();
@@ -142,8 +142,8 @@ public class OptionsMenuController extends Control {
             if (waitingButton != null && SettingsManager.instance != null) {
                 waitingButton.setText(SettingsManager.instance.getBindingLabel(waitingAction));
             }
+            DispatchUi.markInputHandled(this);
             cancelRebind();
-            getViewport().setInputAsHandled();
         }
     }
 
