@@ -369,7 +369,7 @@ transform = Transform3D(0.99885, 0, 0.047943324, 0, 1, 0, -0.047943324, 0, 0.998
 transform = Transform3D(0.9999904, 0, 0.0043808073, 0, 1, 0, -0.0043808073, 0, 0.9999904, 25.177282, 0.702, -75.14905)
 
 [node name="parking_104" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=358455466]
-transform = Transform3D(-0.94971013, 0, 0.31313053, 0, 1, 0, -0.31313053, 0, -0.94971013, 28.125788, 0.702, -75.14905)
+transform = Transform3D(-0.94971013, 0, 0.31313053, 0, 1, 0, -0.31313053, 0, -0.94971013, 28.125788, 0.702, -74.050446)
 
 [node name="parking_105" type="Marker3D" parent="World/ParkingMap/VehicleSpawner" unique_id=174091589]
 transform = Transform3D(-0.9972385, 0, -0.0742652, 0, 1, 0, 0.0742652, 0, -0.9972385, 31.257496, 0.702, -74.82016)

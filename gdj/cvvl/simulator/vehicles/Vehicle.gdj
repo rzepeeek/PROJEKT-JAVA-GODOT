@@ -34,5 +34,7 @@ functions = [
 	get_violation_label,
 	get_ticket_type_label,
 	get_status_summary,
+	refit_collision,
+	_ready,
 	sync_fine_status_from_game_state
 ]

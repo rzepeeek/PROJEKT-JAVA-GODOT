@@ -4,6 +4,7 @@ import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
 import godot.annotation.RegisterProperty;
 import godot.api.StaticBody3D;
+import godot.core.StringNames;
 
 @RegisterClass
 public class Vehicle extends StaticBody3D {
@@ -75,6 +76,17 @@ public class Vehicle extends StaticBody3D {
 			return "Miejsce: " + parkingSpotName + " | Mandat wystawiony";
 		}
 		return "Miejsce: " + parkingSpotName + " | Bilet: " + getTicketTypeLabel();
+	}
+
+	@RegisterFunction
+	public void refitCollision() {
+		VehicleModelHelper.refitInspectableCollision(this);
+	}
+
+	@RegisterFunction
+	@Override
+	public void _ready() {
+		callDeferred(StringNames.toGodotName("refitCollision"));
 	}
 
 	@RegisterFunction

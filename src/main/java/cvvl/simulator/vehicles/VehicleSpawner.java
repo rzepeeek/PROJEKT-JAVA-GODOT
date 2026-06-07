@@ -142,8 +142,7 @@ public void spawnAllVehicles() {
 		vehicle.ticketType = randomTicketType();
 
 		VehicleModelHelper.configureVehiclePhysics(vehicle);
-		addCollisionShape(vehicle, PLACEHOLDER_COLLISION_SIZE, new Vector3(0, 0, 0));
-		VehicleModelHelper.ensureInspectableCollision(vehicle);
+		addCollisionShape(vehicle, PLACEHOLDER_COLLISION_SIZE, groundedCollisionCenter(PLACEHOLDER_COLLISION_SIZE));
 
 		if (!buildVisualFromModel(vehicle, resolveModelPath(modelFile))) {
 			buildPlaceholderVisual(vehicle, randomCarColor());
@@ -156,6 +155,7 @@ public void spawnAllVehicles() {
 
 		Vector3 markerGlobal = spot.getGlobalPosition();
 		VehicleModelHelper.placeOnGroundAt(vehicle, markerGlobal);
+		VehicleModelHelper.refitInspectableCollision(vehicle);
 		spawned.add(vehicle);
 	}
 
@@ -188,6 +188,10 @@ public void spawnAllVehicles() {
 		material.setRoughness(0.45f);
 		body.setMaterialOverride(material);
 		vehicle.addChild(body);
+	}
+
+	private static Vector3 groundedCollisionCenter(Vector3 size) {
+		return new Vector3(0f, (float) size.getY() * 0.5f, 0f);
 	}
 
 	private void addCollisionShape(Vehicle vehicle, Vector3 size, Vector3 center) {

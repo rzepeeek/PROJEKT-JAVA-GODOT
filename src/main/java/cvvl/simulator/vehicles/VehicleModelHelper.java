@@ -27,6 +27,7 @@ public final class VehicleModelHelper {
 	public static final int GROUND_COLLISION_MASK = 1;
 	private static final float TARGET_LENGTH_Z = 4.2f;
 	private static final float COLLISION_PADDING = 0.12f;
+	private static final Vector3 FALLBACK_COLLISION_SIZE = new Vector3(1.8f, 1.4f, 4.2f);
 	private static final float GROUND_RAY_TOP = 80f;
 	private static final float GROUND_RAY_BOTTOM = -30f;
 	private static final float MIN_FLOOR_NORMAL_Y = 0.55f;
@@ -41,8 +42,10 @@ public final class VehicleModelHelper {
 		vehicle.addChild(holder);
 
 		if (instance instanceof StaticBody3D || instance instanceof RigidBody3D) {
-			transferChildren(instance, holder);
-			instance.queueFree();
+			Node3D physicsRoot = (Node3D) instance;
+			holder.setTransform(physicsRoot.getTransform());
+			transferChildren(physicsRoot, holder);
+			physicsRoot.queueFree();
 		} else if (instance instanceof Node3D node3d) {
 			holder.addChild(node3d);
 		} else {
@@ -67,6 +70,64 @@ public final class VehicleModelHelper {
 		if (collision != null) {
 			collision.setDisabled(false);
 		}
+	}
+
+	/** Dopasowuje collider do wizualu — wywołaj po dodaniu pojazdu do sceny. */
+	public static void refitInspectableCollision(Vehicle vehicle) {
+		configureVehiclePhysics(vehicle);
+		ensureCollisionShape(vehicle);
+
+		Node3D visualRoot = findVisualRoot(vehicle);
+		if (visualRoot != null) {
+			fitCollisionToMeshes(vehicle, visualRoot);
+		}
+
+		CollisionShape3D collision = (CollisionShape3D) vehicle.getNodeOrNull("Collision");
+		if (collision == null || collision.getShape() == null || !hasUsableCollisionShape(collision)) {
+			applyFallbackCollision(vehicle);
+		}
+		ensureInspectableCollision(vehicle);
+	}
+
+	private static Node3D findVisualRoot(Vehicle vehicle) {
+		Node bodyModel = vehicle.getNodeOrNull("BodyModel");
+		if (bodyModel instanceof Node3D modelRoot) {
+			return modelRoot;
+		}
+		Node body = vehicle.getNodeOrNull("Body");
+		if (body instanceof Node3D placeholderRoot) {
+			return placeholderRoot;
+		}
+		return null;
+	}
+
+	private static void ensureCollisionShape(Vehicle vehicle) {
+		if (vehicle.getNodeOrNull("Collision") != null) {
+			return;
+		}
+		CollisionShape3D collision = new CollisionShape3D();
+		collision.setName("Collision");
+		vehicle.addChild(collision);
+	}
+
+	private static boolean hasUsableCollisionShape(CollisionShape3D collision) {
+		if (collision.getShape() instanceof BoxShape3D box) {
+			return (float) box.getSize().length() > 0.2f;
+		}
+		return collision.getShape() != null;
+	}
+
+	private static void applyFallbackCollision(Vehicle vehicle) {
+		CollisionShape3D collision = (CollisionShape3D) vehicle.getNodeOrNull("Collision");
+		if (collision == null) {
+			return;
+		}
+		Vector3 size = FALLBACK_COLLISION_SIZE;
+		Vector3 center = new Vector3(0f, (float) size.getY() * 0.5f, 0f);
+		BoxShape3D shape = new BoxShape3D();
+		shape.setSize(size);
+		collision.setShape(shape);
+		collision.setPosition(center);
 	}
 
 	/** Ustawia pojazd na podłożu w X/Z markera; dolna krawędź modelu na asfalcie. */
@@ -256,6 +317,9 @@ public final class VehicleModelHelper {
 	private static void fitCollisionToMeshes(Vehicle vehicle, Node3D modelRoot) {
 		AABB bounds = computeLocalBounds(vehicle, modelRoot);
 		if (bounds == null) {
+			bounds = computeLocalBoundsFromGlobalMeshes(vehicle);
+		}
+		if (bounds == null) {
 			return;
 		}
 
@@ -274,21 +338,53 @@ public final class VehicleModelHelper {
 	}
 
 	private static AABB computeLocalBounds(Node3D space, Node root) {
-		return accumulateBounds(null, root, space);
+		Transform3D rootToSpace = root == space
+				? new Transform3D()
+				: space.getGlobalTransform().affineInverse().times(((Node3D) root).getGlobalTransform());
+		return accumulateBoundsLocal(null, root, rootToSpace);
 	}
 
-	private static AABB accumulateBounds(AABB merged, Node node, Node3D space) {
+	private static AABB computeLocalBoundsFromGlobalMeshes(Vehicle vehicle) {
+		AABB global = computeGlobalMeshBounds(vehicle);
+		if (global == null) {
+			return null;
+		}
+		Transform3D toLocal = vehicle.getGlobalTransform().affineInverse();
+		Vector3 p = global.getPosition();
+		Vector3 s = global.getSize();
+		Vector3[] corners = {
+				new Vector3((float) p.getX(), (float) p.getY(), (float) p.getZ()),
+				new Vector3((float) (p.getX() + s.getX()), (float) p.getY(), (float) p.getZ()),
+				new Vector3((float) p.getX(), (float) (p.getY() + s.getY()), (float) p.getZ()),
+				new Vector3((float) p.getX(), (float) p.getY(), (float) (p.getZ() + s.getZ())),
+				new Vector3((float) (p.getX() + s.getX()), (float) (p.getY() + s.getY()), (float) (p.getZ() + s.getZ()))
+		};
+		AABB local = null;
+		for (Vector3 corner : corners) {
+			Vector3 transformed = toLocal.times(corner);
+			if (local == null) {
+				local = new AABB(transformed, new Vector3());
+			} else {
+				local = local.expand(transformed);
+			}
+		}
+		return local;
+	}
+
+	private static AABB accumulateBoundsLocal(AABB merged, Node node, Transform3D nodeToSpace) {
 		if (node instanceof MeshInstance3D mesh && mesh.getMesh() != null) {
 			AABB local = mesh.getAabb();
 			if ((float) local.getSize().length() > 0.001f) {
-				Transform3D toSpace = space.getGlobalTransform()
-						.affineInverse()
-						.times(mesh.getGlobalTransform());
-				merged = mergeTransformedAabb(merged, local, toSpace);
+				merged = mergeTransformedAabb(merged, local, nodeToSpace);
 			}
 		}
 		for (int i = 0; i < node.getChildCount(); i++) {
-			merged = accumulateBounds(merged, node.getChild(i), space);
+			Node child = node.getChild(i);
+			Transform3D childToSpace = nodeToSpace;
+			if (child instanceof Node3D child3d) {
+				childToSpace = nodeToSpace.times(child3d.getTransform());
+			}
+			merged = accumulateBoundsLocal(merged, child, childToSpace);
 		}
 		return merged;
 	}

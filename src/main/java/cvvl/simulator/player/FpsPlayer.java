@@ -1,6 +1,7 @@
 package cvvl.simulator.player;
 
 import cvvl.simulator.systems.SettingsManager;
+import cvvl.simulator.vehicles.VehicleModelHelper;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
 import godot.annotation.RegisterProperty;
@@ -45,6 +46,7 @@ public class FpsPlayer extends CharacterBody3D {
 	@RegisterFunction
 	@Override
 	public void _ready() {
+		setCollisionMask(GROUND_COLLISION_MASK | VehicleModelHelper.VEHICLE_COLLISION_LAYER);
 		setFloorSnapLength(0.25f);
 		setFloorMaxAngle((float) Math.toRadians(50));
 		applyStandingEyeHeight();
