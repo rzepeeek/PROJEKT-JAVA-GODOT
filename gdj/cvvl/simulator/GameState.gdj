@@ -53,6 +53,7 @@ functions = [
 	get_game_time_tick_seconds,
 	get_minutes_per_tick,
 	reset_new_game,
+	should_restore_player_from_save,
 	mark_loaded_from_save,
 	mark_saved_to_slot,
 	increment_cars_inspected,

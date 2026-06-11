@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dioflgl881557"
-path.s3tc="res://.godot/imported/Parking_map_panel_normal_5.png-b786f13dfa3c46f1d27bd4270ac51df1.s3tc.ctex"
+uid="uid://ct0o3n2ql326j"
+path="res://.godot/imported/menu.png-b1c8252add7c479c06a3ba1ad06a1c09.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "9ac4d108700d5aaa3dd42e012241158f"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://maps/Parking_map_panel_normal_5.png"
-dest_files=["res://.godot/imported/Parking_map_panel_normal_5.png-b786f13dfa3c46f1d27bd4270ac51df1.s3tc.ctex"]
+source_file="res://vehicles/menu.png"
+dest_files=["res://.godot/imported/menu.png-b1c8252add7c479c06a3ba1ad06a1c09.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -27,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -41,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

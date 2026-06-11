@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://main_menu"]
+[gd_scene format=3 uid="uid://w6ckvb4cyh31"]
 
-[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/MainMenuController.gdj" id="1"]
-[ext_resource type="Script" path="res://gdj/cvvl/simulator/ui/DispatchMenuButton.gdj" id="2"]
+[ext_resource type="Script" uid="uid://b2sy1yeqrb30y" path="res://gdj/cvvl/simulator/ui/MainMenuController.gdj" id="1"]
+[ext_resource type="Script" uid="uid://2xjol3sno47b" path="res://gdj/cvvl/simulator/ui/DispatchMenuButton.gdj" id="2"]
 
-[node name="MainMenu" type="Control"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ykhv"]
+load_path = "res://.godot/imported/menu.png-b1c8252add7c479c06a3ba1ad06a1c09.ctex"
+
+[node name="MainMenu" type="Control" unique_id=1690194658]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1834982829]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,7 +25,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.03, 0.05, 0.1, 1)
 
-[node name="BackgroundGradient" type="ColorRect" parent="."]
+[node name="BackgroundGradient" type="ColorRect" parent="." unique_id=1007581320]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,7 +35,12 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.05, 0.12, 0.18, 0.45)
 
-[node name="MenuPanel" type="VBoxContainer" parent="."]
+[node name="Menu" type="Sprite2D" parent="." unique_id=1769030921]
+position = Vector2(960, 539)
+scale = Vector2(1.25, 1.0527344)
+texture = SubResource("CompressedTexture2D_0ykhv")
+
+[node name="MenuPanel" type="VBoxContainer" parent="." unique_id=596116156]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -44,46 +52,46 @@ offset_bottom = 200.0
 grow_vertical = 2
 theme_override_constants/separation = 14
 
-[node name="Title" type="Label" parent="MenuPanel"]
+[node name="Title" type="Label" parent="MenuPanel" unique_id=1782581470]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.85, 0.95, 1)
 theme_override_font_sizes/font_size = 32
-text = "CVVL DISPATCH"
 
-[node name="Subtitle" type="Label" parent="MenuPanel"]
+[node name="Subtitle" type="Label" parent="MenuPanel" unique_id=587490042]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.7, 0.78, 1)
 theme_override_font_sizes/font_size = 14
-text = "Parking Enforcement Terminal"
 
-[node name="Spacer" type="Control" parent="MenuPanel"]
+[node name="Spacer" type="Control" parent="MenuPanel" unique_id=962741913]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="BtnStart" type="Button" parent="MenuPanel"]
+[node name="BtnStart" type="Button" parent="MenuPanel" unique_id=1618309948]
 custom_minimum_size = Vector2(320, 44)
 layout_mode = 2
-script = ExtResource("2")
 text = "Rozpocznij gre"
+script = ExtResource("2")
 
-[node name="BtnTutorial" type="Button" parent="MenuPanel"]
+[node name="BtnTutorial" type="Button" parent="MenuPanel" unique_id=1088351352]
 custom_minimum_size = Vector2(320, 44)
 layout_mode = 2
-script = ExtResource("2")
 text = "Samouczek"
+script = ExtResource("2")
 
-[node name="BtnLoad" type="Button" parent="MenuPanel"]
+[node name="BtnLoad" type="Button" parent="MenuPanel" unique_id=1785437675]
 custom_minimum_size = Vector2(320, 44)
 layout_mode = 2
-script = ExtResource("2")
 text = "Wczytaj gre"
+script = ExtResource("2")
 
-[node name="BtnSettings" type="Button" parent="MenuPanel"]
+[node name="BtnSettings" type="Button" parent="MenuPanel" unique_id=1364975200]
 custom_minimum_size = Vector2(320, 44)
 layout_mode = 2
-script = ExtResource("2")
 text = "Ustawienia"
+script = ExtResource("2")
 
-[node name="BtnQuit" type="Button" parent="MenuPanel"]
+[node name="BtnQuit" type="Button" parent="MenuPanel" unique_id=267891308]
 custom_minimum_size = Vector2(320, 44)
 layout_mode = 2
-script = ExtResource("2")
 text = "Wyjscie"
+script = ExtResource("2")

@@ -65,6 +65,9 @@ shadow_enabled = true
 [node name="ParkingMap" parent="World" unique_id=127148089 instance=ExtResource("9")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1619587, -0.64402837, -0.108982086)
 
+[node name="spawn_player2" type="Marker3D" parent="World/ParkingMap" unique_id=1589216495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.695206, 0.7, 5.0613256)
+
 [node name="VehicleSpawner" type="Node3D" parent="World/ParkingMap" unique_id=513456868]
 script = ExtResource("2")
 

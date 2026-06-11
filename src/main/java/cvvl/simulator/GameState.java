@@ -110,6 +110,8 @@ public class GameState extends Node {
 	@RegisterProperty
 	public float playerPitch = 0f;
 
+	private boolean loadedFromSaveThisSession = false;
+
 	private final Set<String> finedVehiclePlates = new HashSet<>();
 	private final List<SavedVehicleData> persistedVehicles = new ArrayList<>();
 
@@ -181,8 +183,14 @@ public class GameState extends Node {
 		clearFinedVehicles();
 		clearPersistedVehicles();
 		clearPlayerTransform();
+		loadedFromSaveThisSession = false;
 		clearPendingFineCancel();
 		notifyStateChanged();
+	}
+
+	@RegisterFunction
+	public boolean shouldRestorePlayerFromSave() {
+		return loadedFromSaveThisSession && persistPlayerTransform;
 	}
 
 	public void captureVehicleSnapshots(List<SavedVehicleData> snapshots) {
@@ -227,6 +235,7 @@ public class GameState extends Node {
 	public void markLoadedFromSave(int slot) {
 		difficultyLocked = true;
 		activeSaveSlot = slot;
+		loadedFromSaveThisSession = true;
 	}
 
 	@RegisterFunction

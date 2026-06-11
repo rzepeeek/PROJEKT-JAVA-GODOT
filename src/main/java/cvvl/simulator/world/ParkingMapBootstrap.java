@@ -3,6 +3,7 @@ package cvvl.simulator.world;
 import cvvl.simulator.vehicles.VehicleSpawner;
 import godot.annotation.RegisterClass;
 import godot.annotation.RegisterFunction;
+import godot.core.StringNames;
 import godot.api.BoxShape3D;
 import godot.api.CollisionShape3D;
 import godot.api.MeshInstance3D;
@@ -46,6 +47,15 @@ public class ParkingMapBootstrap extends Node3D {
 
 		ensureMapFloor((float) size.getX(), (float) size.getZ());
 		spawnVehiclesOnMap();
+		schedulePlayerSpawn();
+	}
+
+	private void schedulePlayerSpawn() {
+		Node scene = getTree().getCurrentScene();
+		if (scene == null) {
+			return;
+		}
+		scene.callDeferred(StringNames.toGodotName("finishPlayerSpawn"));
 	}
 
 	private void spawnVehiclesOnMap() {

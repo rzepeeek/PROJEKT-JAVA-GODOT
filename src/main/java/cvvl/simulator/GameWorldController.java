@@ -3,6 +3,7 @@ package cvvl.simulator;
 import cvvl.simulator.player.FpsPlayer;
 import cvvl.simulator.systems.SettingsManager;
 import cvvl.simulator.player.PlayerInteraction;
+import cvvl.simulator.world.PlayerSpawnHelper;
 import cvvl.simulator.ui.DispatchUi;
 import cvvl.simulator.ui.OptionsMenuController;
 import cvvl.simulator.ui.PauseMenuController;
@@ -53,6 +54,7 @@ public class GameWorldController extends Node {
 		}
 
 		player.setMouseCaptured(true);
+		finishPlayerSpawn();
 		callDeferred(StringNames.toGodotName("finishPlayerSpawn"));
 
 		if (GameState.instance != null && GameState.instance.reopenPauseAfterReturn) {
@@ -98,7 +100,6 @@ public class GameWorldController extends Node {
 	@RegisterFunction
 	public void openPauseMenu() {
 		paused = true;
-		capturePlayerTransform();
 		setGameplayPaused(true);
 		ticketPanel.hidePanel();
 		pauseMenu.open();
@@ -196,6 +197,10 @@ public class GameWorldController extends Node {
 		);
 	}
 
+	private void applyPlayerSpawnMarker() {
+		PlayerSpawnHelper.applyMarkerToPlayer(player, PlayerSpawnHelper.findSpawnMarker(this));
+	}
+
 	@RegisterFunction
 	public boolean isPaused() {
 		return paused;
@@ -203,7 +208,11 @@ public class GameWorldController extends Node {
 
 	@RegisterFunction
 	public void finishPlayerSpawn() {
-		restorePlayerTransform();
+		if (GameState.instance != null && GameState.instance.shouldRestorePlayerFromSave()) {
+			restorePlayerTransform();
+		} else {
+			applyPlayerSpawnMarker();
+		}
 		if (player != null) {
 			player.snapToGround();
 		}
